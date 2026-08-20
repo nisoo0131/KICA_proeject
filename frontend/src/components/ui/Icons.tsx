@@ -6,6 +6,11 @@ const base = {
   strokeLinecap: "round" as const,
   strokeLinejoin: "round" as const,
   viewBox: "0 0 24 24",
+  // Default size so an icon rendered without a sizing class still has intrinsic
+  // dimensions — otherwise it stretches to fill its flex container. A sizing
+  // class on the caller still wins, since CSS beats presentation attributes.
+  width: 20,
+  height: 20,
 };
 
 export const HomeIcon = (p: IconProps) => (
