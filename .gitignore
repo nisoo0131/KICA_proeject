@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.next/
+out/
+build/
+
+# Environment files — these hold the Supabase database password and must never be committed.
+# Only .env.example (with placeholders) belongs in version control.
+.env
+.env.*
+!.env.example
+
+# Prisma generated client
+**/node_modules/.prisma/
+
+# Supabase CLI local temp state
+supabase/.temp/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

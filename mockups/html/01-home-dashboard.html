@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>홈 · PlanFlow</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .rail-card .rail-head { display:flex; align-items:center; justify-content:space-between; padding:17px 20px; border-bottom:1px solid var(--border-light); }
+  .rail-legend { display:flex; gap:6px; padding: 14px 20px 0; font-size:11.5px; color:var(--text-tertiary); }
+  .rail-legend span { padding: 0 10px; position:relative; }
+  .rail-legend span:not(:last-child)::after { content:"›"; position:absolute; right:-8px; color:var(--border); }
+  .rail-cols { display:grid; grid-template-columns: 210px 1fr 70px 60px 60px 45px 85px 90px; gap:10px; padding: 12px 20px 6px; font-size:11.5px; color:var(--text-tertiary); font-weight:600; }
+  .rail-cols span:not(:first-child) { text-align:center; }
+  .proj-row { display:grid; grid-template-columns: 210px 1fr 70px 60px 60px 45px 85px 90px; gap:10px; align-items:center; padding: 12px 20px; border-top:1px solid var(--border-light); }
+  .proj-name-block { display:flex; align-items:center; gap:8px; }
+  .proj-name-block .star { color:#F0B429; width:14px; height:14px; flex-shrink:0; }
+  .proj-name-block .pn { font-weight:700; font-size:13px; }
+  .proj-name-block .pt { font-size:11.5px; color:var(--text-tertiary); }
+  .proj-rail { display:flex; align-items:center; }
+  .proj-row .center { text-align:center; font-size:12.5px; }
+  .proj-row .pct { text-align:center; font-weight:700; color:var(--blue-dark); font-size:13px; }
+  .proj-row .due { text-align:center; font-size:12px; color:var(--text-secondary); }
+  .proj-row .who { display:flex; align-items:center; gap:6px; justify-content:center; font-size:12px; }
+
+  .risk-item { padding: 14px 20px; border-top:1px solid var(--border-light); }
+  .risk-item:first-child { border-top:none; }
+  .risk-top { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .risk-ic { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .risk-ic svg { width:15px; height:15px; }
+  .risk-title { font-weight:700; font-size:13.5px; }
+  .risk-desc { font-size:12.5px; color:var(--text-secondary); margin: 4px 0 8px 34px; line-height:1.5; }
+  .risk-meta { display:flex; gap:16px; margin-left:34px; font-size:12px; color:var(--text-tertiary); }
+  .risk-footer { display:flex; align-items:center; justify-content:flex-end; gap:6px; padding:13px 20px; font-size:12.5px; font-weight:700; color:var(--blue-dark); }
+  .risk-footer svg { width:14px; height:14px; }
+
+  .bottom-row { display:grid; grid-template-columns: 1fr 1.3fr 1fr; gap: 16px; margin-top:16px; }
+  .action-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .action-icon svg { width:17px; height:17px; }
+  .action-row { display:flex; align-items:center; gap:12px; padding:12px 0; border-top:1px solid var(--border-light); }
+  .action-row:first-child { border-top:none; }
+  .action-count { margin-left:auto; }
+
+  .change-item { padding: 11px 0; border-top:1px solid var(--border-light); font-size:12.5px; }
+  .change-item:first-child { border-top:none; }
+  .change-top { display:flex; align-items:center; gap:8px; color:var(--text-tertiary); margin-bottom:4px; }
+  .change-body { color: var(--text-primary); }
+  .change-body b { font-weight:700; }
+
+  .sched-item { display:flex; gap:12px; padding:11px 0; border-top:1px solid var(--border-light); }
+  .sched-item:first-child { border-top:none; }
+  .sched-time { font-size:12.5px; font-weight:700; color:var(--text-secondary); width:40px; flex-shrink:0; }
+  .sched-title { font-size:13px; font-weight:600; }
+  .sched-sub { font-size:11.5px; color:var(--text-tertiary); margin-top:2px; }
+  .sched-badge { margin-left:auto; align-self:flex-start; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-mark"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2c-3 4-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-7-6-11Z"/></svg></span>
+      PlanFlow
+    </div>
+    <nav class="nav-list">
+      <a class="nav-item active" href="01-home-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1v-9"/></svg>홈</a>
+      <a class="nav-item" href="02-project-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18Z"/></svg>프로젝트</a>
+      <a class="nav-item" href="04-requirement-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4.5" width="12" height="16" rx="1.5"/><path d="M9 4.5V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v.5"/><path d="M9 11h6M9 15h6M9 8h3"/></svg>요구사항</a>
+      <a class="nav-item" href="06-screen-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m4 17 5-5 3.5 3.5L17 11l3.5 3.5"/></svg>화면기획</a>
+      <a class="nav-item" href="10-test-issue-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/><path d="M8 15h8"/></svg>테스트/이슈</a>
+    </nav>
+    <div class="sidebar-collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>접기</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg>검색 (프로젝트, 요구사항, 화면...)</div>
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.3 5.5 1.5 6.5H4.5C4.7 14.5 6 13 6 9Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="badge-dot">8</span></button>
+      <div class="user-block">
+        <span class="avatar c1">김민</span>
+        <div class="user-text"><div class="user-name">김민수</div><div class="user-org">플랜플로우 주식회사</div></div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="page-header">
+        <div>
+          <h1>홈</h1>
+          <div class="page-sub">프로젝트 진행 현황과 내 업무를 한눈에 확인하세요.</div>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">진행 중 프로젝트 수</span><span class="stat-icon" style="background:var(--blue-light);color:var(--blue-dark);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5"/><path d="M3 12.5h18"/></svg></span></div>
+          <div class="stat-value">8</div><div class="stat-sub">전체 12개</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">지연 프로젝트 수</span><span class="stat-icon" style="background:var(--red-light);color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span></div>
+          <div class="stat-value">3</div><div class="stat-sub">전체 12개</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">검토 대기 건수</span><span class="stat-icon" style="background:var(--orange-light);color:var(--orange);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M4.5 20c1-3.5 4-5.5 7.5-5.5s6.5 2 7.5 5.5"/></svg></span></div>
+          <div class="stat-value">27</div><div class="stat-sub">요구사항/화면/디자인</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">미해결 이슈 수</span><span class="stat-icon" style="background:var(--purple-light);color:var(--purple);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 19 6v6c0 4.5-3 7.5-7 8.5-4-1-7-4-7-8.5V6Z"/></svg></span></div>
+          <div class="stat-value">18</div><div class="stat-sub">전체 이슈</div>
+        </div>
+      </div>
+
+      <div class="col-2-1" style="align-items:start;">
+        <div class="card rail-card">
+          <div class="rail-head"><span class="card-title">프로젝트 진행 위치</span><span class="card-link">전체 프로젝트 보기</span></div>
+          <div class="rail-legend"><span>요구사항</span><span>일정수립</span><span>화면정의</span><span>와이어프레임</span><span>Hi-Fi 디자인</span><span>통합테스트</span><span>완료</span></div>
+          <div class="rail-cols"><span>&nbsp;</span><span></span><span>진행률</span><span>지연</span><span>검토대기</span><span>이슈</span><span>마감일</span><span>담당자</span></div>
+
+          <div class="proj-row">
+            <div class="proj-name-block"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.6l-5.9 3 1.3-6.6-4.9-4.6 6.6-.8Z"/></svg><div><div class="pn">통합인증 리뉴얼</div><div class="pt">디지털플랫폼팀</div></div></div>
+            <div class="proj-rail"><span class="stage-node done"></span><span class="stage-line done"></span><span class="stage-node done"></span><span class="stage-line done"></span><span class="stage-node done"></span><span class="stage-line done"></span><span class="stage-node current"></span><span class="stage-line"></span><span class="stage-node"></span><span class="stage-line"></span><span class="stage-node"></span></div>
+            <div class="pct">72%</div><div class="center">-</div><div class="center" style="color:var(--orange);font-weight:700;">5</div><div class="center">3</div><div class="due">2025-06-30</div>
+            <div class="who"><span class="avatar c1" style="width:20px;height:20px;font-size:9px;">김민</span>김민수</div>
+          </div>
+          <div class="proj-row">
+            <div class="proj-name-block"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.6l-5.9 3 1.3-6.6-4.9-4.6 6.6-.8Z"/></svg><div><div class="pn">KICA 대시보드 고도화</div><div class="pt">데이터서비스팀</div></div></div>
+            <div class="proj-rail"><span class="stage-node done"></span><span class="stage-line done"></span><span class="stage-node done"></span><span class="stage-line done"></span><span class="stage-node current"></span><span class="stage-line"></span><span class="stage-node"></span><span class="stage-line"></span><span class="stage-node"></span><span class="stage-line"></span><span class="stage-node"></span></div>
+            <div class="pct">48%</div><div class="center"><span class="badge badge-red">지연 5일</span></div><div class="center" style="color:var(--orange);font-weight:700;">8</div><div class="center">7</div><div class="due">2025-05-28</div>
+            <div class="who"><span class="avatar c2" style="width:20px;height:20px;font-size:9px;">이지</span>이지현</div>
+          </div>
+          <div class="proj-row">
+            <div class="proj-name-block"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.6l-5.9 3 1.3-6.6-4.9-4.6 6.6-.8Z"/></svg><div><div class="pn">모바일 신청 개선</div><div class="pt">모바일서비스팀</div></div></div>
+            <div class="proj-rail"><span class="stage-node done"></span><span class="stage-line"></span><span class="stage-node current"></span><span class="stage-line"></span><span class="stage-node"></span><span class="stage-line"></span><span class="stage-node"></span><span class="stage-line"></span><span class="stage-node"></span><span class="stage-line"></span><span class="stage-node"></span></div>
+            <div class="pct">33%</div><div class="center">-</div><div class="center" style="color:var(--orange);font-weight:700;">3</div><div class="center">2</div><div class="due">2025-06-15</div>
+            <div class="who"><span class="avatar c3" style="width:20px;height:20px;font-size:9px;">박정</span>박정우</div>
+          </div>
+          <div class="proj-row">
+            <div class="proj-name-block"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.6l-5.9 3 1.3-6.6-4.9-4.6 6.6-.8Z"/></svg><div><div class="pn">회원센터 개편</div><div class="pt">CX혁신팀</div></div></div>
+            <div class="proj-rail"><span class="stage-node done"></span><span class="stage-line done"></span><span class="stage-node done"></span><span class="stage-line done"></span><span class="stage-node done"></span><span class="stage-line done"></span><span class="stage-node current"></span><span class="stage-line"></span><span class="stage-node"></span><span class="stage-line"></span><span class="stage-node"></span></div>
+            <div class="pct">88%</div><div class="center">-</div><div class="center" style="color:var(--orange);font-weight:700;">2</div><div class="center">1</div><div class="due">2025-06-10</div>
+            <div class="who"><span class="avatar c4" style="width:20px;height:20px;font-size:9px;">최유</span>최유리</div>
+          </div>
+          <div class="proj-row">
+            <div class="proj-name-block"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.6l-5.9 3 1.3-6.6-4.9-4.6 6.6-.8Z"/></svg><div><div class="pn">알림 시스템 고도화</div><div class="pt">플랫폼개발팀</div></div></div>
+            <div class="proj-rail"><span class="stage-node current"></span><span class="stage-line"></span><span class="stage-node"></span><span class="stage-line"></span><span class="stage-node"></span><span class="stage-line"></span><span class="stage-node"></span><span class="stage-line"></span><span class="stage-node"></span><span class="stage-line"></span><span class="stage-node"></span></div>
+            <div class="pct">16%</div><div class="center"><span class="badge badge-red">지연 3일</span></div><div class="center" style="color:var(--orange);font-weight:700;">6</div><div class="center">4</div><div class="due">2025-06-20</div>
+            <div class="who"><span class="avatar c5" style="width:20px;height:20px;font-size:9px;">이재</span>이재훈</div>
+          </div>
+          <div class="proj-row">
+            <div class="proj-name-block"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.6l-5.9 3 1.3-6.6-4.9-4.6 6.6-.8Z"/></svg><div><div class="pn">정산 프로세스 자동화</div><div class="pt">경영지원팀</div></div></div>
+            <div class="proj-rail"><span class="stage-node done"></span><span class="stage-line done"></span><span class="stage-node done"></span><span class="stage-line done"></span><span class="stage-node done"></span><span class="stage-line done"></span><span class="stage-node done"></span><span class="stage-line done"></span><span class="stage-node current"></span><span class="stage-line"></span><span class="stage-node"></span></div>
+            <div class="pct">92%</div><div class="center">-</div><div class="center" style="color:var(--orange);font-weight:700;">1</div><div class="center">0</div><div class="due">2025-05-20</div>
+            <div class="who"><span class="avatar c6" style="width:20px;height:20px;font-size:9px;">한소</span>한소연</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="card-title">위험 프로젝트</span><span class="card-link">전체 보기</span></div>
+          <div class="risk-item">
+            <div class="risk-top"><span class="risk-ic" style="background:var(--red-light);color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v6"/><circle cx="12" cy="16.5" r="0.4" fill="currentColor"/></svg></span><span class="risk-title">KICA 대시보드 고도화</span><span class="badge badge-red" style="margin-left:auto;">지연 5일</span></div>
+            <div class="risk-desc">마감일이 지났거나 지연이 발생한 프로젝트입니다.</div>
+            <div class="risk-meta"><span>마감일 2025-05-28</span><span>담당자 이지현</span></div>
+          </div>
+          <div class="risk-item">
+            <div class="risk-top"><span class="risk-ic" style="background:var(--orange-light);color:var(--orange);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 21.5 20h-19Z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.3" fill="currentColor"/></svg></span><span class="risk-title">알림 시스템 고도화</span><span class="badge badge-red" style="margin-left:auto;">지연 3일</span></div>
+            <div class="risk-desc">일정 지연으로 추가 조치가 필요한 프로젝트입니다.</div>
+            <div class="risk-meta"><span>마감일 2025-06-20</span><span>담당자 이재훈</span></div>
+          </div>
+          <div class="risk-item">
+            <div class="risk-top"><span class="risk-ic" style="background:var(--orange-light);color:var(--orange);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 21.5 20h-19Z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.3" fill="currentColor"/></svg></span><span class="risk-title">모바일 신청 개선</span><span class="badge badge-orange" style="margin-left:auto;">위험</span></div>
+            <div class="risk-desc">이슈 증가로 일정에 위험이 있는 프로젝트입니다.</div>
+            <div class="risk-meta"><span>마감일 2025-06-15</span><span>담당자 박정우</span></div>
+          </div>
+          <div class="risk-footer">위험 프로젝트 관리 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        </div>
+      </div>
+
+      <div class="bottom-row">
+        <div class="card">
+          <div class="card-header"><span class="card-title">내 액션 아이템</span><span class="card-link">전체 보기</span></div>
+          <div class="card-body" style="padding-top:6px;">
+            <div class="action-row"><span class="action-icon" style="background:var(--blue-light);color:var(--blue-dark);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4.5" width="12" height="16" rx="1.5"/><path d="M9 11h6M9 15h6M9 8h3"/></svg></span><div><div class="li-title">요구사항 검토</div><div class="li-sub">검토가 필요한 요구사항이 있습니다.</div></div><span class="li-count action-count">7</span></div>
+            <div class="action-row"><span class="action-icon" style="background:var(--green-light);color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m4 17 5-5 3.5 3.5L17 11l3.5 3.5"/></svg></span><div><div class="li-title">디자인 확인</div><div class="li-sub">확인이 필요한 디자인이 있습니다.</div></div><span class="li-count action-count">6</span></div>
+            <div class="action-row"><span class="action-icon" style="background:var(--orange-light);color:var(--orange);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7"/></svg></span><div><div class="li-title">의사결정 확인</div><div class="li-sub">의사결정이 필요한 항목이 있습니다.</div></div><span class="li-count action-count">4</span></div>
+            <div class="action-row"><span class="action-icon" style="background:var(--purple-light);color:var(--purple);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg></span><div><div class="li-title">테스트/이슈 처리</div><div class="li-sub">확인 및 처리가 필요한 항목이 있습니다.</div></div><span class="li-count action-count">11</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="card-title">최근 변경사항</span><span class="card-link">전체 보기</span></div>
+          <div class="card-body" style="padding-top:6px;">
+            <div class="change-item"><div class="change-top"><span>2시간 전</span><span class="badge badge-blue">요구사항</span></div><div class="change-body"><b>통합인증 리뉴얼</b> - 비밀번호 재설정 요구사항이 수정되었습니다.</div></div>
+            <div class="change-item"><div class="change-top"><span>4시간 전</span><span class="badge badge-purple">디자인</span></div><div class="change-body"><b>회원센터 개편</b> - 마이페이지 화면 디자인이 업데이트되었습니다.</div></div>
+            <div class="change-item"><div class="change-top"><span>어제 15:32</span><span class="badge badge-blue">요구사항</span></div><div class="change-body"><b>모바일 신청 개선</b> - 본인인증 요구사항이 추가되었습니다.</div></div>
+            <div class="change-item"><div class="change-top"><span>어제 11:08</span><span class="badge badge-teal">테스트</span></div><div class="change-body"><b>KICA 대시보드 고도화</b> - 통합 테스트 1차 결과가 등록되었습니다.</div></div>
+            <div class="change-item"><div class="change-top"><span>05.19 17:45</span><span class="badge badge-orange">의사결정</span></div><div class="change-body"><b>정산 프로세스 자동화</b> - 정책 변경에 대한 의사결정이 완료되었습니다.</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="card-title">오늘의 일정</span><span class="card-link">전체 일정 보기</span></div>
+          <div class="card-body" style="padding-top:6px;">
+            <div class="sched-item"><span class="sched-time">10:00</span><div><div class="sched-title">통합인증 리뉴얼</div><div class="sched-sub">요구사항 검토 회의</div></div><span class="badge badge-gray sched-badge">예정</span></div>
+            <div class="sched-item"><span class="sched-time">11:30</span><div><div class="sched-title">회원센터 개편</div><div class="sched-sub">디자인 리뷰</div></div><span class="badge badge-gray sched-badge">예정</span></div>
+            <div class="sched-item"><span class="sched-time">14:00</span><div><div class="sched-title">KICA 대시보드 고도화</div><div class="sched-sub">개발 진행 점검</div></div><span class="badge badge-gray sched-badge">예정</span></div>
+            <div class="sched-item"><span class="sched-time">16:00</span><div><div class="sched-title">알림 시스템 고도화</div><div class="sched-sub">이슈 정리 및 우선순위 논의</div></div><span class="badge badge-gray sched-badge">예정</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

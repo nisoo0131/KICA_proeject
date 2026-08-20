@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>테스트/이슈 목록 · PlanFlow</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .stat-mini-row { display:grid; grid-template-columns: repeat(6,1fr); gap:14px; margin-bottom:20px; }
+  .stat-mini { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; }
+  .stat-mini .stat-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .stat-mini .stat-label { font-size:12px; color:var(--text-secondary); font-weight:600; }
+  .stat-mini .stat-icon { width:30px; height:30px; border-radius:8px; }
+  .stat-mini .stat-icon svg { width:15px; height:15px; }
+  .stat-mini .stat-value { font-size:22px; font-weight:800; }
+  .stat-mini .stat-sub { font-size:11px; color:var(--text-tertiary); margin-top:2px; }
+
+  .list-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .list-hdr h2 { font-size:16px; font-weight:700; }
+  .list-hdr-right { display:flex; gap:8px; }
+  .tt-grid { display:grid; grid-template-columns: 1fr 300px; gap:20px; align-items:start; }
+  .type-tag { display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:700; }
+  .type-tag svg { width:13px; height:13px; }
+  .test-res-item { display:flex; align-items:flex-start; gap:10px; padding:11px 0; border-top:1px solid var(--border-light); }
+  .test-res-item:first-child { border-top:none; }
+  .tr-ic { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .tr-ic svg { width:14px; height:14px; }
+  .tr-title { font-size:12.5px; font-weight:700; }
+  .tr-sub { font-size:11.5px; color:var(--text-tertiary); margin-top:2px; }
+  .high-item { display:flex; align-items:flex-start; gap:10px; padding:11px 0; border-top:1px solid var(--border-light); }
+  .high-item:first-child { border-top:none; }
+  .high-ic { width:26px; height:26px; border-radius:50%; background:var(--red-light); color:var(--red); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .high-ic svg { width:14px; height:14px; }
+  .high-title { font-size:12.5px; font-weight:700; }
+  .foot-bar { display:flex; align-items:center; justify-content:space-between; margin-top:16px; font-size:12.5px; color:var(--text-secondary); }
+  .sidefoot { text-align:right; padding:12px 18px; font-size:12.5px; font-weight:700; color:var(--blue-dark); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2c-3 4-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-7-6-11Z"/></svg></span>PlanFlow</div>
+    <nav class="nav-list">
+      <a class="nav-item" href="01-home-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1v-9"/></svg>홈</a>
+      <a class="nav-item" href="02-project-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18Z"/></svg>프로젝트</a>
+      <a class="nav-item" href="04-requirement-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4.5" width="12" height="16" rx="1.5"/><path d="M9 4.5V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v.5"/><path d="M9 11h6M9 15h6M9 8h3"/></svg>요구사항</a>
+      <a class="nav-item" href="06-screen-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m4 17 5-5 3.5 3.5L17 11l3.5 3.5"/></svg>화면기획</a>
+      <a class="nav-item active" href="10-test-issue-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg>테스트/이슈</a>
+    </nav>
+    <div class="sidebar-collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>접기</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg>검색 (프로젝트, 요구사항, 화면...)</div>
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.3 5.5 1.5 6.5H4.5C4.7 14.5 6 13 6 9Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="badge-dot">6</span></button>
+      <div class="user-block"><span class="avatar c1">김민</span><div class="user-text"><div class="user-name">김민수</div><div class="user-org">플랜플로우 주식회사</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+    </header>
+
+    <div class="page-content">
+      <div class="page-header"><div><h1>테스트/이슈 목록</h1><div class="page-sub">테스트 시나리오 실행 결과와 결함/이슈를 통합 관리하고, 품질 현황을 확인하세요.</div></div></div>
+
+      <div class="stat-mini-row">
+        <div class="stat-mini"><div class="stat-top"><span class="stat-label">전체 시나리오 수</span><span class="stat-icon" style="background:var(--gray-light);color:var(--gray);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5"/></svg></span></div><div class="stat-value">256</div></div>
+        <div class="stat-mini"><div class="stat-top"><span class="stat-label">성공률</span><span class="stat-icon" style="background:var(--green-light);color:var(--green);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 17 9 9l4 4 7-10"/><path d="M15 3h5v5"/></svg></span></div><div class="stat-value" style="color:var(--green);">87.5%</div><div class="stat-sub">성공 224 / 실패 32</div></div>
+        <div class="stat-mini"><div class="stat-top"><span class="stat-label">실패 수</span><span class="stat-icon" style="background:var(--red-light);color:var(--red);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></svg></span></div><div class="stat-value">32</div></div>
+        <div class="stat-mini"><div class="stat-top"><span class="stat-label">미실행 수</span><span class="stat-icon" style="background:var(--gray-light);color:var(--gray);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span></div><div class="stat-value">18</div></div>
+        <div class="stat-mini"><div class="stat-top"><span class="stat-label">미해결 이슈 수</span><span class="stat-icon" style="background:var(--purple-light);color:var(--purple);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5 19 6v6c0 4.5-3 7.5-7 8.5-4-1-7-4-7-8.5V6Z"/></svg></span></div><div class="stat-value">23</div></div>
+        <div class="stat-mini"><div class="stat-top"><span class="stat-label">High 이슈 수</span><span class="stat-icon" style="background:var(--red-light);color:var(--red);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4 21.5 20h-19Z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.3" fill="currentColor"/></svg></span></div><div class="stat-value">7</div></div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab">테스트 시나리오</div>
+        <div class="tab">테스트 결과</div>
+        <div class="tab">결함 관리</div>
+        <div class="tab active">이슈 관리</div>
+        <div class="tab">조치 현황</div>
+      </div>
+
+      <div class="tt-grid">
+        <div>
+          <div class="list-hdr">
+            <h2>이슈 관리</h2>
+            <div class="list-hdr-right">
+              <button class="btn btn-sm"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16l-6 7.5V19l-4 2v-8.5Z"/></svg>필터</button>
+              <div class="select" style="width:130px;"><span>전체 프로젝트</span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6"/></svg></div>
+              <button class="btn btn-sm btn-primary"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>이슈 등록</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="table-wrap">
+            <table class="table" style="min-width:900px;">
+              <thead><tr><th>ID</th><th>유형</th><th>제목</th><th>관련 화면</th><th>관련 요구사항</th><th>심각도</th><th>상태</th><th>담당자</th><th>최근 결과 또는 조치 예정일</th></tr></thead>
+              <tbody>
+                <tr><td class="row-link">ISS-246</td><td><span class="type-tag" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg>결함</span></td><td>로그인 시 간헐적으로 세션이 만료되는 현상</td><td>로그인 화면</td><td>REQ-1023</td><td><span class="badge badge-red">High</span></td><td><span class="badge badge-gray">접수</span></td><td><div class="person"><span class="avatar c1">김민</span>김민수</div></td><td>2025-05-30</td></tr>
+                <tr><td class="row-link">ISS-245</td><td><span class="type-tag" style="color:var(--orange);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4 21.5 20h-19Z"/><path d="M12 10v4"/></svg>이슈</span></td><td>대시보드 지표 클릭 시 상세 데이터 미표시</td><td>대시보드</td><td>REQ-2001</td><td><span class="badge badge-orange">Medium</span></td><td><span class="badge badge-blue">조치중</span></td><td><div class="person"><span class="avatar c5">이재</span>이재현</div></td><td>2025-06-02</td></tr>
+                <tr><td class="row-link">ISS-244</td><td><span class="type-tag" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg>결함</span></td><td>프로젝트 생성 시 중복명 허용 오류</td><td>프로젝트 목록</td><td>REQ-3002</td><td><span class="badge badge-red">High</span></td><td><span class="badge badge-orange">확인대기</span></td><td><div class="person"><span class="avatar c6">박정</span>박정우</div></td><td>2025-06-03</td></tr>
+                <tr><td class="row-link">ISS-243</td><td><span class="type-tag" style="color:var(--orange);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4 21.5 20h-19Z"/><path d="M12 10v4"/></svg>이슈</span></td><td>파일 업로드 시 지원하지 않는 확장자 오류 메시지 개선</td><td>요구사항 등록</td><td>REQ-1104</td><td><span class="badge badge-gray">Low</span></td><td><span class="badge badge-blue">조치중</span></td><td><div class="person"><span class="avatar c3">이지</span>이지현</div></td><td>2025-06-01</td></tr>
+                <tr><td class="row-link">ISS-242</td><td><span class="type-tag" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg>결함</span></td><td>검색 필터 초기화 시 조건이 유지되는 문제</td><td>요구사항 목록</td><td>REQ-1102</td><td><span class="badge badge-orange">Medium</span></td><td><span class="badge badge-green">완료</span></td><td><div class="person"><span class="avatar c4">최윤</span>최윤희</div></td><td>2025-05-28</td></tr>
+                <tr><td class="row-link">ISS-241</td><td><span class="type-tag" style="color:var(--orange);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4 21.5 20h-19Z"/><path d="M12 10v4"/></svg>이슈</span></td><td>알림 이메일 템플릿 문구 오타 수정</td><td>알림 설정</td><td>REQ-5001</td><td><span class="badge badge-gray">Low</span></td><td><span class="badge badge-green">완료</span></td><td><div class="person"><span class="avatar c7">한소</span>한소연</div></td><td>2025-05-27</td></tr>
+                <tr><td class="row-link">ISS-240</td><td><span class="type-tag" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg>결함</span></td><td>테스트 결과 내보내기 시 파일형식 선택 오류</td><td>테스트 결과</td><td>REQ-6003</td><td><span class="badge badge-orange">Medium</span></td><td><span class="badge badge-gray">보류</span></td><td><div class="person"><span class="avatar c1">김민</span>김민수</div></td><td>2025-06-10</td></tr>
+                <tr><td class="row-link">ISS-239</td><td><span class="type-tag" style="color:var(--orange);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4 21.5 20h-19Z"/><path d="M12 10v4"/></svg>이슈</span></td><td>모바일 화면에서 테이블 가로 스크롤 개선</td><td>모바일 공통</td><td>REQ-7002</td><td><span class="badge badge-gray">Low</span></td><td><span class="badge badge-gray">접수</span></td><td><div class="person"><span class="avatar c6">박정</span>박정우</div></td><td>2025-06-04</td></tr>
+                <tr><td class="row-link">ISS-238</td><td><span class="type-tag" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg>결함</span></td><td>역할 권한 변경 후 즉시 반영되지 않는 현상</td><td>사용자 관리</td><td>REQ-4001</td><td><span class="badge badge-red">High</span></td><td><span class="badge badge-blue">조치중</span></td><td><div class="person"><span class="avatar c5">이재</span>이재현</div></td><td>2025-06-02</td></tr>
+                <tr><td class="row-link">ISS-237</td><td><span class="type-tag" style="color:var(--orange);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4 21.5 20h-19Z"/><path d="M12 10v4"/></svg>이슈</span></td><td>도움말 문서 링크 404 오류</td><td>도움말</td><td>REQ-8001</td><td><span class="badge badge-gray">Low</span></td><td><span class="badge badge-gray">접수</span></td><td><div class="person"><span class="avatar c3">이지</span>이지현</div></td><td>2025-05-31</td></tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+
+          <div class="foot-bar">
+            <span>전체 23건</span>
+            <div class="pagination">
+              <div class="page-btn"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m15 6-6 6 6 6"/></svg></div>
+              <div class="page-btn active">1</div><div class="page-btn">2</div><div class="page-btn">3</div>
+              <div class="page-btn"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"/></svg></div>
+            </div>
+            <div class="select" style="width:100px;"><span>10 / 페이지</span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6"/></svg></div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="card"><div class="card-header"><span class="card-title">최근 테스트 결과</span><span class="card-link">전체 보기</span></div><div class="card-body">
+            <div class="test-res-item"><span class="tr-ic" style="background:var(--green-light);color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7"/></svg></span><div><div class="tr-title">통합 인증 기능 테스트</div><div class="tr-sub">성공 18 / 실패 2</div></div><span class="cell-sub" style="margin-left:auto;white-space:nowrap;">2025-06-03<br>14:35</span></div>
+            <div class="test-res-item"><span class="tr-ic" style="background:var(--orange-light);color:var(--orange);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4 21.5 20h-19Z"/><path d="M12 10v4"/></svg></span><div><div class="tr-title">대시보드 지표 표시 테스트</div><div class="tr-sub">성공 10 / 실패 3</div></div><span class="cell-sub" style="margin-left:auto;white-space:nowrap;">2025-06-03<br>11:20</span></div>
+            <div class="test-res-item"><span class="tr-ic" style="background:var(--green-light);color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7"/></svg></span><div><div class="tr-title">요구사항 등록/수정 테스트</div><div class="tr-sub">성공 16 / 실패 0</div></div><span class="cell-sub" style="margin-left:auto;white-space:nowrap;">2025-06-02<br>16:45</span></div>
+            <div class="test-res-item"><span class="tr-ic" style="background:var(--red-light);color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></svg></span><div><div class="tr-title">파일 업로드 검증 테스트</div><div class="tr-sub">성공 6 / 실패 4</div></div><span class="cell-sub" style="margin-left:auto;white-space:nowrap;">2025-06-02<br>10:12</span></div>
+            <div class="test-res-item"><span class="tr-ic" style="background:var(--green-light);color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7"/></svg></span><div><div class="tr-title">알림 발송 테스트</div><div class="tr-sub">성공 8 / 실패 0</div></div><span class="cell-sub" style="margin-left:auto;white-space:nowrap;">2025-06-01<br>15:30</span></div>
+          </div></div>
+
+          <div class="card"><div class="card-header"><span class="card-title">미해결 High 이슈</span><span class="card-link">전체 보기</span></div><div class="card-body">
+            <div class="high-item"><span class="high-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg></span><div style="flex:1;"><div class="high-title">로그인 시 간헐적으로 세션이 만료되는 현상</div></div><span class="badge badge-gray">접수</span></div>
+            <div class="high-item"><span class="high-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg></span><div style="flex:1;"><div class="high-title">프로젝트 생성 시 중복명 허용 오류</div></div><span class="badge badge-orange">확인대기</span></div>
+            <div class="high-item"><span class="high-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg></span><div style="flex:1;"><div class="high-title">역할 권한 변경 후 즉시 반영되지 않는 현상</div></div><span class="badge badge-blue">조치중</span></div>
+            <div class="high-item"><span class="high-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg></span><div style="flex:1;"><div class="high-title">대용량 파일 업로드 시 타임아웃 발생</div></div><span class="badge badge-blue">조치중</span></div>
+            <div class="high-item"><span class="high-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg></span><div style="flex:1;"><div class="high-title">데이터 내보내기 시 일부 행 누락</div></div><span class="badge badge-orange">확인대기</span></div>
+            <div class="high-item"><span class="high-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg></span><div style="flex:1;"><div class="high-title">권한 없는 사용자의 관리자 메뉴 접근</div></div><span class="badge badge-gray">보류</span></div>
+            <div class="high-item"><span class="high-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg></span><div style="flex:1;"><div class="high-title">보고서 생성 시 서버 오류</div></div><span class="badge badge-green">완료</span></div>
+            <div class="sidefoot">이슈 관리로 이동 →</div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

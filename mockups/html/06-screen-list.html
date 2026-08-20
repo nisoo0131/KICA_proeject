@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>화면 목록 · PlanFlow</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .filter-row2b { display:flex; gap:12px; margin-bottom:16px; }
+  .filter-row2b .select { flex:1; }
+  .filter-row2b .filter-actions { flex-shrink:0; display:flex; gap:8px; }
+  .list-toolbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .list-toolbar .count { font-size:13.5px; font-weight:700; }
+  .req-chip { display:inline-block; background:var(--blue-light); color:var(--blue-dark); font-size:11.5px; font-weight:700; padding:2px 7px; border-radius:5px; margin-right:3px; }
+  .foot-bar { display:flex; align-items:center; justify-content:space-between; margin-top:16px; font-size:12.5px; color:var(--text-secondary); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2c-3 4-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-7-6-11Z"/></svg></span>PlanFlow</div>
+    <nav class="nav-list">
+      <a class="nav-item" href="01-home-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1v-9"/></svg>홈</a>
+      <a class="nav-item" href="02-project-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18Z"/></svg>프로젝트</a>
+      <a class="nav-item" href="04-requirement-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4.5" width="12" height="16" rx="1.5"/><path d="M9 4.5V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v.5"/><path d="M9 11h6M9 15h6M9 8h3"/></svg>요구사항</a>
+      <a class="nav-item active" href="06-screen-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m4 17 5-5 3.5 3.5L17 11l3.5 3.5"/></svg>화면기획</a>
+      <a class="nav-item" href="10-test-issue-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg>테스트/이슈</a>
+    </nav>
+    <div class="sidebar-collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>접기</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg>검색 (프로젝트, 요구사항, 화면...)</div>
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.3 5.5 1.5 6.5H4.5C4.7 14.5 6 13 6 9Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="badge-dot">8</span></button>
+      <div class="user-block"><span class="avatar c1">김민</span><div class="user-text"><div class="user-name">김민수</div><div class="user-org">플랜플로우 주식회사</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+    </header>
+
+    <div class="page-content">
+      <div class="page-header"><div><h1>화면 목록</h1><div class="page-sub">프로젝트의 모든 화면과 진행 상태를 한눈에 확인하세요.</div></div></div>
+
+      <div class="filter-bar">
+        <div class="select"><span>전체 프로젝트</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="select"><span>전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="select"><span>전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="select"><span>전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+      <div class="filter-row2b">
+        <div class="select"><span>전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="select"><span>전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="select"><span>전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="select"><span>전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="filter-actions">
+          <button class="btn btn-ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.2M20 12a8 8 0 0 1-14 5.2"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg>초기화</button>
+          <button class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg>검색</button>
+        </div>
+      </div>
+
+      <div class="list-toolbar">
+        <span class="count">총 128개</span>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7.5 11 4.5 4.5L16.5 11"/><path d="M5 19.5h14"/></svg>엑셀 다운로드</button>
+          <button class="btn btn-sm btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>화면 추가</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+        <table class="table" style="min-width:1220px;">
+          <thead><tr><th><span class="checkbox"></span></th><th>화면 ID</th><th>화면명</th><th>메뉴 경로</th><th>화면 상태</th><th>관련 요구사항</th><th>와이어프레임</th><th>Hi-Fi</th><th>검토 대기</th><th>담당자</th><th>최근 수정일</th><th>작업</th></tr></thead>
+          <tbody>
+            <tr><td><span class="checkbox"></span></td><td><a class="row-link" href="07-screen-definition-detail.html">SCR-024</a></td><td>인증서 신청</td><td>인증/보안 &gt; 인증서 신청</td><td><span class="badge badge-blue">구현 중</span></td><td><span class="req-chip">REQ-003</span><span class="req-chip">REQ-007</span><span class="cell-sub">+2</span></td><td><span class="badge badge-green">완료</span></td><td><span class="badge badge-blue">진행 중</span></td><td>아니요</td><td><div class="person"><span class="avatar c3">이지</span>이지연</div></td><td>2025-06-02<br>14:32</td><td><a class="row-link" href="07-screen-definition-detail.html">열기↗</a> <span class="kebab" style="display:inline-flex;"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></span></td></tr>
+            <tr><td><span class="checkbox"></span></td><td><a class="row-link" href="07-screen-definition-detail.html">SCR-025</a></td><td>본인확인</td><td>인증/보안 &gt; 본인확인</td><td><span class="badge badge-blue">구현 중</span></td><td><span class="req-chip">REQ-004</span><span class="req-chip">REQ-005</span></td><td><span class="badge badge-green">완료</span></td><td><span class="badge badge-green">완료</span></td><td>아니요</td><td><div class="person"><span class="avatar c6">박정</span>박정우</div></td><td>2025-06-01<br>10:15</td><td><a class="row-link" href="07-screen-definition-detail.html">열기↗</a></td></tr>
+            <tr><td><span class="checkbox"></span></td><td><a class="row-link" href="07-screen-definition-detail.html">SCR-026</a></td><td>비밀번호 변경</td><td>마이페이지 &gt; 보안 설정</td><td><span class="badge badge-gray">기획 중</span></td><td><span class="req-chip">REQ-009</span></td><td><span class="badge badge-blue">진행 중</span></td><td><span class="badge badge-gray">대기</span></td><td>아니요</td><td><div class="person"><span class="avatar c5">최유</span>최유리</div></td><td>2025-05-31<br>17:45</td><td><a class="row-link" href="07-screen-definition-detail.html">열기↗</a></td></tr>
+            <tr><td><span class="checkbox"></span></td><td><a class="row-link" href="07-screen-definition-detail.html">SCR-027</a></td><td>알림 설정</td><td>마이페이지 &gt; 알림 설정</td><td><span class="badge badge-blue">구현 중</span></td><td><span class="req-chip">REQ-010</span><span class="req-chip">REQ-011</span><span class="cell-sub">+1</span></td><td><span class="badge badge-green">완료</span></td><td><span class="badge badge-blue">진행 중</span></td><td><span class="badge badge-orange">예</span></td><td><div class="person"><span class="avatar c1">이재</span>이재훈</div></td><td>2025-05-30<br>09:22</td><td><a class="row-link" href="07-screen-definition-detail.html">열기↗</a></td></tr>
+            <tr><td><span class="checkbox"></span></td><td><a class="row-link" href="07-screen-definition-detail.html">SCR-028</a></td><td>결제 수단 관리</td><td>결제/정산 &gt; 결제 수단 관리</td><td><span class="badge badge-blue">구현 중</span></td><td><span class="req-chip">REQ-012</span><span class="req-chip">REQ-013</span></td><td><span class="badge badge-green">완료</span></td><td><span class="badge badge-green">완료</span></td><td>아니요</td><td><div class="person"><span class="avatar c7">한소</span>한소연</div></td><td>2025-05-29<br>16:08</td><td><a class="row-link" href="07-screen-definition-detail.html">열기↗</a></td></tr>
+            <tr><td><span class="checkbox"></span></td><td><a class="row-link" href="07-screen-definition-detail.html">SCR-029</a></td><td>결제 내역</td><td>결제/정산 &gt; 결제 내역</td><td><span class="badge badge-green">구현 완료</span></td><td><span class="req-chip">REQ-014</span></td><td><span class="badge badge-green">완료</span></td><td><span class="badge badge-green">완료</span></td><td>아니요</td><td><div class="person"><span class="avatar c1">김민</span>김민수</div></td><td>2025-05-28<br>11:03</td><td><a class="row-link" href="07-screen-definition-detail.html">열기↗</a></td></tr>
+            <tr><td><span class="checkbox"></span></td><td><a class="row-link" href="07-screen-definition-detail.html">SCR-030</a></td><td>고객센터 메인</td><td>고객지원 &gt; 고객센터</td><td><span class="badge badge-gray">기획 중</span></td><td><span class="req-chip">REQ-015</span></td><td><span class="badge badge-blue">진행 중</span></td><td><span class="badge badge-gray">대기</span></td><td>아니요</td><td><div class="person"><span class="avatar c3">이지</span>이지연</div></td><td>2025-05-27<br>14:20</td><td><a class="row-link" href="07-screen-definition-detail.html">열기↗</a></td></tr>
+            <tr><td><span class="checkbox"></span></td><td><a class="row-link" href="07-screen-definition-detail.html">SCR-031</a></td><td>마이페이지</td><td>마이페이지 &gt; 마이페이지</td><td><span class="badge badge-green">구현 완료</span></td><td><span class="req-chip">REQ-016</span><span class="req-chip">REQ-017</span><span class="cell-sub">+1</span></td><td><span class="badge badge-green">완료</span></td><td><span class="badge badge-green">완료</span></td><td>아니요</td><td><div class="person"><span class="avatar c6">박정</span>박정우</div></td><td>2025-05-26<br>09:11</td><td><a class="row-link" href="07-screen-definition-detail.html">열기↗</a></td></tr>
+            <tr><td><span class="checkbox"></span></td><td><a class="row-link" href="07-screen-definition-detail.html">SCR-032</a></td><td>회원 탈퇴</td><td>마이페이지 &gt; 회원 탈퇴</td><td><span class="badge badge-gray">기획 중</span></td><td><span class="req-chip">REQ-018</span></td><td><span class="badge badge-gray">대기</span></td><td><span class="badge badge-gray">대기</span></td><td>아니요</td><td><div class="person"><span class="avatar c5">최유</span>최유리</div></td><td>2025-05-25<br>18:33</td><td><a class="row-link" href="07-screen-definition-detail.html">열기↗</a></td></tr>
+            <tr><td><span class="checkbox"></span></td><td><a class="row-link" href="07-screen-definition-detail.html">SCR-033</a></td><td>공지사항 목록</td><td>고객지원 &gt; 공지사항</td><td><span class="badge badge-green">구현 완료</span></td><td><span class="req-chip">REQ-019</span></td><td><span class="badge badge-green">완료</span></td><td><span class="badge badge-green">완료</span></td><td>아니요</td><td><div class="person"><span class="avatar c1">이재</span>이재훈</div></td><td>2025-05-24<br>10:50</td><td><a class="row-link" href="07-screen-definition-detail.html">열기↗</a></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <div class="foot-bar">
+        <div style="width:1px;"></div>
+        <div class="pagination">
+          <div class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></div>
+          <div class="page-btn active">1</div><div class="page-btn">2</div><div class="page-btn">3</div><div class="page-btn">4</div><div class="page-btn">5</div><div class="page-btn">…</div><div class="page-btn">13</div>
+          <div class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></div>
+        </div>
+        <div class="select" style="width:110px;"><span>10개씩 보기</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>화면정의 · PlanFlow</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .split2 { display:grid; grid-template-columns: 2.1fr 1fr; gap:20px; align-items:start; }
+  .stack { display:flex; flex-direction:column; gap:16px; }
+  .row2 { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+  .field-block { margin-bottom:14px; }
+  .field-label { font-size:12px; color:var(--text-tertiary); margin-bottom:4px; }
+  .field-value { font-size:13px; font-weight:600; }
+  .req-tag { display:inline-flex; align-items:center; gap:6px; background:var(--blue-light); color:var(--blue-dark); padding:5px 10px; border-radius:7px; font-size:12.5px; font-weight:700; margin:0 6px 6px 0; }
+  .req-tag svg { width:12px; height:12px; cursor:pointer; }
+  .side-file { display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--blue-dark); font-weight:600; padding:6px 0; }
+  .side-file svg { width:14px; height:14px; flex-shrink:0; }
+  .btn-tag { display:inline-block; border:1px solid var(--border); border-radius:7px; padding:5px 10px; font-size:12px; font-weight:600; margin:0 5px 5px 0; }
+  .deliv-line { display:flex; align-items:center; gap:10px; padding:10px 0; border-top:1px solid var(--border-light); }
+  .deliv-line:first-child { border-top:none; }
+  .deliv-line .dl-label { width:70px; font-size:12.5px; color:var(--text-tertiary); font-weight:600; }
+  .comment2 { display:flex; gap:9px; padding:12px 0; border-top:1px solid var(--border-light); }
+  .comment2:first-child { border-top:none; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2c-3 4-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-7-6-11Z"/></svg></span>PlanFlow</div>
+    <nav class="nav-list">
+      <a class="nav-item" href="01-home-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1v-9"/></svg>홈</a>
+      <a class="nav-item" href="02-project-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18Z"/></svg>프로젝트</a>
+      <a class="nav-item" href="04-requirement-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4.5" width="12" height="16" rx="1.5"/><path d="M9 4.5V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v.5"/><path d="M9 11h6M9 15h6M9 8h3"/></svg>요구사항</a>
+      <a class="nav-item active" href="06-screen-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m4 17 5-5 3.5 3.5L17 11l3.5 3.5"/></svg>화면기획</a>
+      <a class="nav-item" href="10-test-issue-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg>테스트/이슈</a>
+    </nav>
+    <div class="sidebar-collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>접기</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg>검색 (프로젝트, 요구사항, 화면...)</div>
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.3 5.5 1.5 6.5H4.5C4.7 14.5 6 13 6 9Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="badge-dot">8</span></button>
+      <div class="user-block"><span class="avatar c1">김민</span><div class="user-text"><div class="user-name">김민수</div><div class="user-org">플랜플로우 주식회사</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+    </header>
+
+    <div class="page-content">
+      <div class="breadcrumb"><a href="06-screen-list.html">화면기획</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg><span class="current">SCR-024</span></div>
+      <div class="page-header">
+        <div style="display:flex;align-items:center;gap:12px;"><h1>화면정의</h1><span class="badge badge-blue">작성 완료</span></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-outline-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16v11H8.5L4 20.5Z"/></svg>검토 요청</button>
+          <button class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7"/></svg>확정</button>
+          <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 4.5 4.5 4.5L8 20.5H3.5V16Z"/></svg>수정</button>
+          <button class="btn"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
+        </div>
+      </div>
+
+      <div class="split2">
+        <div class="stack">
+          <div class="row2">
+            <div class="card"><div class="card-header"><span class="card-title">기본 정보</span></div><div class="card-body">
+              <div class="field-block"><div class="field-label">화면 ID</div><div class="field-value">SCR-024</div></div>
+              <div class="field-block"><div class="field-label">화면명</div><div class="field-value">인증서 신청</div></div>
+              <div class="field-block"><div class="field-label">메뉴 경로</div><div class="field-value">인증 관리 &gt; 인증서 신청</div></div>
+              <div class="field-block"><div class="field-label">화면 목적</div><div class="field-value" style="font-weight:400;">사용자가 전자서명을 위한 인증서를 신청하고, 신청 내역을 조회할 수 있다.</div></div>
+              <div class="field-block" style="margin-bottom:0;"><div class="field-label">화면 상태</div><span class="badge badge-blue">작성 완료</span></div>
+            </div></div>
+
+            <div class="card"><div class="card-header"><span class="card-title">관련 요구사항</span></div><div class="card-body">
+              <div class="req-tag">REQ-103 비밀번호 재설정 정책 개선 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg></div><br>
+              <div class="req-tag">REQ-121 휴대폰 인증 추가 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg></div>
+              <div style="margin-top:12px;"><span class="card-link" style="color:var(--blue-dark);">+ 요구사항 추가</span></div>
+            </div></div>
+          </div>
+
+          <div class="row2">
+            <div class="card"><div class="card-header"><span class="card-title">화면 기능</span></div><div class="card-body">
+              <div class="field-label" style="margin-bottom:6px;">주요 기능</div>
+              <ul class="bullets" style="margin-bottom:12px;"><li>인증서 신청 양식 작성 및 제출</li><li>신청 내역 조회 및 상태 확인</li><li>신청 취소 (접수 이전)</li></ul>
+              <div class="field-label" style="margin-bottom:6px;">버튼/액션</div>
+              <div style="margin-bottom:12px;"><span class="btn-tag">신청하기</span><span class="btn-tag">임시저장</span><span class="btn-tag">취소</span><span class="btn-tag">내역보기</span></div>
+              <div class="field-label" style="margin-bottom:4px;">권한 조건</div>
+              <div style="font-size:13px;">인증 관리 권한 보유자<br>(ROLE_CERT_USER 이상)</div>
+            </div></div>
+
+            <div class="card"><div class="card-header"><span class="card-title">입출력 정의</span></div><div class="card-body">
+              <div class="field-label" style="margin-bottom:6px;">입력 (Input)</div>
+              <table class="mini-table" style="margin-bottom:14px;"><thead><tr><th>항목명</th><th>필수</th><th>데이터 타입</th></tr></thead>
+                <tbody><tr><td>신청자명</td><td>Y</td><td>String(50)</td></tr><tr><td>이메일</td><td>Y</td><td>String(100)</td></tr><tr><td>휴대폰 번호</td><td>Y</td><td>String(20)</td></tr><tr><td>인증서 비밀번호</td><td>Y</td><td>String(50)</td></tr></tbody>
+              </table>
+              <div class="field-label" style="margin-bottom:6px;">출력 (Output)</div>
+              <table class="mini-table"><thead><tr><th>항목명</th><th>설명</th><th>데이터 타입</th></tr></thead>
+                <tbody><tr><td>신청 ID</td><td>신청 고유 식별자</td><td>String(36)</td></tr><tr><td>신청 상태</td><td>신청 상태 코드</td><td>String(20)</td></tr><tr><td>신청일시</td><td>신청 일시</td><td>DateTime</td></tr></tbody>
+              </table>
+            </div></div>
+          </div>
+
+          <div class="row2">
+            <div class="card"><div class="card-header"><span class="card-title">메시지 / 예외</span></div><div class="card-body">
+              <table class="mini-table"><thead><tr><th>발생 조건</th><th>메시지</th><th>사용자 액션</th></tr></thead>
+                <tbody>
+                  <tr><td>필수 항목 미입력</td><td>필수 항목을 모두 입력해주세요.</td><td>미입력 항목 확인 후 입력</td></tr>
+                  <tr><td>비밀번호 불일치</td><td>비밀번호가 일치하지 않습니다.</td><td>비밀번호 재입력 후 입력</td></tr>
+                  <tr><td>휴대폰 인증 실패</td><td>휴대폰 인증에 실패했습니다. 다시 시도해주세요.</td><td>인증번호 재전송 후 재시도</td></tr>
+                  <tr><td>중복 신청</td><td>이미 신청이 접수된 내역이 있습니다.</td><td>내역 확인 후 필요시 취소</td></tr>
+                  <tr><td>서버 오류</td><td>서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</td><td>잠시 후 재시도 또는 고객센터 문의</td></tr>
+                </tbody>
+              </table>
+            </div></div>
+
+            <div class="card"><div class="card-header"><span class="card-title">디자인 산출물</span></div><div class="card-body">
+              <div class="deliv-line"><span class="dl-label">Wireframe</span><a class="row-link" href="08-wireframe-management.html" style="flex:1;">SCR-024_wireframe.pdf ↗</a><span class="badge badge-green">완료</span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="color:var(--text-tertiary);"><path d="M12 4v11"/><path d="m7.5 11 4.5 4.5L16.5 11"/><path d="M5 19.5h14"/></svg></div>
+              <div class="deliv-line"><span class="dl-label">Hi-Fi</span><a class="row-link" href="09-hifi-design-management.html" style="flex:1;">SCR-024_hifi.pdf ↗</a><span class="badge badge-green">완료</span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="color:var(--text-tertiary);"><path d="M12 4v11"/><path d="m7.5 11 4.5 4.5L16.5 11"/><path d="M5 19.5h14"/></svg></div>
+              <div class="deliv-line"><span class="dl-label">프로토타입</span><span style="flex:1;color:var(--blue-dark);font-weight:600;">Figma 링크 ↗</span><span class="badge badge-orange">진행중</span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="color:var(--text-tertiary);"><path d="M9 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"/><path d="M14 4h6v6"/><path d="M20 4 11 13"/></svg></div>
+            </div></div>
+          </div>
+
+          <div class="row2">
+            <div class="card"><div class="card-header"><span class="card-title">협업 · 검토 의견</span></div><div class="card-body">
+              <div class="comment2"><span class="avatar c6">박정</span><div style="flex:1;"><div class="c-head"><span class="c-name">박정우</span><span class="badge badge-outline" style="font-size:10.5px;">BA</span><span class="badge badge-orange" style="font-size:10.5px;">검토 중</span><span class="c-time">2025-05-30 14:20</span></div><div class="c-body">비밀번호 규칙 안내 툴팁 문구를 보완하고, 인증서 용도 선택 옵션을 최신 목록으로 업데이트해주세요.</div></div></div>
+              <div class="comment2"><span class="avatar c5">최유</span><div style="flex:1;"><div class="c-head"><span class="c-name">최유리</span><span class="badge badge-outline" style="font-size:10.5px;">개발자</span><span class="badge badge-green" style="font-size:10.5px;">검토 중</span><span class="c-time">2025-05-30 15:10</span></div><div class="c-body">승인 후 다운로드 URL 제공 방식은 S3 pre-signed URL로 진행하면 될 것 같습니다.</div></div></div>
+              <div class="reply-input">의견을 입력하세요...<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 14-7-7 14-2-5-5-2Z"/></svg></div>
+            </div></div>
+
+            <div class="card"><div class="card-header"><span class="card-title">변경 이력</span></div><div class="card-body">
+              <table class="mini-table"><thead><tr><th>버전</th><th>작성자</th><th>변경 일시</th><th>변경 내용</th></tr></thead>
+                <tbody>
+                  <tr><td>v1.0.0</td><td>이재원</td><td>2025-05-30 16:42</td><td>초안 작성</td></tr>
+                  <tr><td>v0.2.0</td><td>이재원</td><td>2025-05-30 14:11</td><td>입출력/예외 메시지 업데이트</td></tr>
+                  <tr><td>v0.1.0</td><td>이재원</td><td>2025-05-28 10:24</td><td>초안 작성</td></tr>
+                </tbody>
+              </table>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="card"><div class="card-body">
+            <div class="kv-row" style="border-bottom:none;padding-bottom:4px;"><span class="kv-label">작성자</span><div class="person"><span class="avatar c1">이재</span><div><div class="p-name">이재원</div><div class="p-sub">UI/UX 디자이너</div></div></div></div>
+            <div class="cell-sub" style="margin:0 0 12px 100px;">2025-05-28 10:24</div>
+            <div class="kv-row" style="border-bottom:none;padding-bottom:4px;"><span class="kv-label">최종 수정자</span><div class="person"><span class="avatar c1">이재</span><div class="p-name">이재원</div></div></div>
+            <div class="cell-sub" style="margin:0 0 12px 100px;">2025-05-30 16:42</div>
+            <div class="kv-row"><span class="kv-label">검토 상태</span><span class="badge badge-orange">검토 대기</span></div>
+            <div class="kv-row"><span class="kv-label">버전</span><span class="kv-value">v1.0.0</span></div>
+            <div class="kv-row"><span class="kv-label">생성일</span><span class="kv-value">2025-05-28 10:24</span></div>
+            <div class="kv-row"><span class="kv-label">최종 수정일</span><span class="kv-value">2025-05-30 16:42</span></div>
+          </div></div>
+
+          <div class="card"><div class="card-body">
+            <div class="field-label" style="margin-bottom:8px;">참조 문서</div>
+            <div style="margin-bottom:14px;"><span class="chip">서비스 정책 v2.33</span> <span class="chip">인증 가이드 v1.1</span></div>
+            <div class="field-label" style="margin-bottom:8px;">첨부 파일</div>
+            <div class="side-file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7l4 4V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"/><path d="M14 3.5V8h4"/></svg>요구사항 명세서.pdf</div>
+            <div class="side-file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7l4 4V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"/><path d="M14 3.5V8h4"/></svg>화면정의의 표준 가이드.pdf</div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

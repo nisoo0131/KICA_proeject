@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Hi-Fi 디자인 관리 · PlanFlow</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .hf-top-card { display:flex; align-items:center; gap:16px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px 20px; margin-bottom:18px; }
+  .hf-thumb { width:56px; height:56px; border-radius:9px; background:var(--gray-light); border:1px solid var(--border-light); display:flex; align-items:center; justify-content:center; color:var(--text-tertiary); flex-shrink:0; }
+  .hf-thumb svg { width:26px; height:26px; }
+  .hf-title-row { display:flex; align-items:center; gap:10px; }
+  .hf-crumb2 { font-size:12px; color:var(--text-tertiary); margin-top:4px; }
+  .hf-grid { display:grid; grid-template-columns: 1fr 280px; gap:20px; align-items:start; }
+  .hf-main-top { display:grid; grid-template-columns: 230px 1fr; gap:16px; margin-bottom:16px; }
+  .latest-badges { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .prev-toolbar { display:flex; align-items:center; gap:6px; padding:12px 16px; border-bottom:1px solid var(--border-light); }
+  .prev-toolbar .pv-btn { width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center; color:var(--text-tertiary); border:1px solid transparent; }
+  .prev-toolbar .pv-btn.on { background:var(--blue-light); color:var(--blue-dark); border-color:var(--blue-light); }
+  .prev-toolbar svg { width:15px; height:15px; }
+  .prev-body { padding:22px; background:#FAFBFC; display:flex; justify-content:center; }
+  .device-frame { width:280px; background:#fff; border:1px solid var(--border); border-radius:10px; padding:16px; }
+  .device-title { font-size:12.5px; font-weight:700; margin-bottom:12px; }
+  .device-row { display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-tertiary); padding:6px 8px; background:var(--gray-light); border-radius:5px; margin-bottom:6px; }
+  .device-btns { display:flex; gap:8px; margin-top:12px; }
+  .device-btns div { flex:1; height:26px; border-radius:6px; background:var(--gray-light); }
+  .device-btns div.primary { background:var(--blue-dark); }
+  .ver-hist-item { padding:12px 16px; border-top:1px solid var(--border-light); position:relative; }
+  .ver-hist-item:first-child { border-top:none; }
+  .ver-hist-item.sel { background:var(--blue-light); }
+  .vh-top { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
+  .review-count { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border-light); }
+  .rv-item { padding:12px 18px; border-top:1px solid var(--border-light); font-size:12.5px; }
+  .rv-item:first-child { border-top:none; }
+  .rv-tag-row { display:flex; gap:6px; margin-bottom:5px; }
+  .rv-meta { color:var(--text-tertiary); font-size:11.5px; margin-top:5px; }
+  .confirm-item { display:flex; gap:12px; padding:13px 0; border-top:1px solid var(--border-light); }
+  .confirm-item:first-child { border-top:none; }
+  .confirm-ic { width:28px; height:28px; border-radius:50%; background:var(--green-light); color:var(--green); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .confirm-ic svg { width:15px; height:15px; }
+  .file-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-top:1px solid var(--border-light); }
+  .file-row:first-child { border-top:none; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2c-3 4-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-7-6-11Z"/></svg></span>PlanFlow</div>
+    <nav class="nav-list">
+      <a class="nav-item" href="01-home-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1v-9"/></svg>홈</a>
+      <a class="nav-item" href="02-project-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18Z"/></svg>프로젝트</a>
+      <a class="nav-item" href="04-requirement-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4.5" width="12" height="16" rx="1.5"/><path d="M9 4.5V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v.5"/><path d="M9 11h6M9 15h6M9 8h3"/></svg>요구사항</a>
+      <a class="nav-item active" href="06-screen-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m4 17 5-5 3.5 3.5L17 11l3.5 3.5"/></svg>화면기획</a>
+      <a class="nav-item" href="10-test-issue-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg>테스트/이슈</a>
+    </nav>
+    <div class="sidebar-collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>접기</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg>검색 (프로젝트, 요구사항, 화면...)</div>
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.3 5.5 1.5 6.5H4.5C4.7 14.5 6 13 6 9Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="badge-dot">8</span></button>
+      <div class="user-block"><span class="avatar c1">김민</span><div class="user-text"><div class="user-name">김민수</div><div class="user-org">플랜플로우 주식회사</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+    </header>
+
+    <div class="page-content">
+      <div class="breadcrumb"><a href="06-screen-list.html">화면기획</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg><a href="09-hifi-design-management.html">Hi-Fi 디자인</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg><span class="current">SCR-024</span></div>
+      <div class="page-header">
+        <div><h1>Hi-Fi 디자인 관리</h1><div class="page-sub">선택한 화면의 Hi-Fi 디자인 버전 관리 및 검토, 확정 이력을 확인하세요.</div></div>
+        <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>목록으로 이동</button>
+      </div>
+
+      <div class="hf-top-card">
+        <div class="hf-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M8 9h8M8 13h5"/></svg></div>
+        <div>
+          <div class="hf-title-row"><span style="font-weight:800;font-size:16px;">SCR-024</span><span style="font-weight:600;font-size:14px;color:var(--text-secondary);">인증서 신청</span><span class="badge badge-outline">Web</span></div>
+          <div class="hf-crumb2">프로젝트 통합인증 리뉴얼 &gt; 화면기획 &gt; 인증 관리</div>
+        </div>
+      </div>
+
+      <div class="hf-grid">
+        <div>
+          <div class="hf-main-top">
+            <div class="card"><div class="card-body">
+              <div class="field-label" style="margin-bottom:8px;">최신 디자인</div>
+              <div class="latest-badges"><span class="badge badge-blue">Hi-Fi v3</span></div>
+              <div class="latest-badges"><span class="badge badge-green">검토 완료 (미확정)</span></div>
+              <div class="latest-badges"><span class="badge badge-orange">⚠ 검토 의견 2건</span></div>
+              <div class="kv-row" style="border:none;padding:6px 0;"><span class="kv-label" style="width:60px;">작성자</span><div class="person"><span class="avatar c3" style="width:20px;height:20px;font-size:9px;">이지</span>이지원</div></div>
+              <div class="cell-sub" style="margin-bottom:6px;">UI/UX 디자이너</div>
+              <div class="kv-row" style="border:none;padding:6px 0;"><span class="kv-label" style="width:60px;">업데이트</span><span class="kv-value" style="font-weight:500;">2025-05-30 17:42</span></div>
+              <div class="kv-row" style="border:none;padding:6px 0;"><span class="kv-label" style="width:60px;">설명</span><span class="kv-value" style="font-weight:500;">신청 정보 입력 영역 및 첨부 파일 영역 UI 개선</span></div>
+              <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+                <button class="btn btn-sm"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"/><path d="M14 4h6v6"/><path d="M20 4 11 13"/></svg>외부 링크 열기</button>
+                <button class="btn btn-sm btn-outline-blue">검토 요청</button>
+                <button class="btn btn-sm btn-primary">확정</button>
+              </div>
+            </div></div>
+
+            <div class="card">
+              <div class="prev-toolbar"><span style="font-size:13px;font-weight:700;margin-right:8px;">디자인 미리보기</span>
+                <div style="margin-left:auto;display:flex;gap:4px;">
+                  <div class="pv-btn on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="12" rx="1.5"/><path d="M9 20.5h6M12 16.5v4"/></svg></div>
+                  <div class="pv-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2.5" width="10" height="19" rx="2"/></svg></div>
+                  <div class="pv-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg></div>
+                  <div class="pv-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg></div>
+                </div>
+              </div>
+              <div class="prev-body">
+                <div class="device-frame">
+                  <div class="device-title">인증서 신청</div>
+                  <div class="cell-sub" style="margin-bottom:10px;">신청 정보</div>
+                  <div class="device-row"><span>이름</span><span>-</span></div>
+                  <div class="device-row"><span>신청자명</span><span>-</span></div>
+                  <div class="device-row"><span>이메일</span><span>-</span></div>
+                  <div class="device-row"><span>휴대폰</span><span>-</span></div>
+                  <div class="cell-sub" style="margin:10px 0 6px;">신청서 첨부 정보</div>
+                  <div class="device-row"><span>첨부 파일</span><span>-</span></div>
+                  <div class="device-btns"><div></div><div class="primary"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="warn-banner">
+            <div class="warn-banner-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 21.5 20h-19Z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.3" fill="currentColor"/></svg>검토 완료된 버전(v3)에 미해결 의견이 있습니다. 의견을 확인하고 반영 후 다시 검토를 요청하거나 확정해주세요.</div>
+            <button class="btn btn-sm" style="background:#fff;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4 5.5h16v11H8.5L4 20.5Z"/></svg>검토 의견 보기 (2)</button>
+          </div>
+
+          <div class="two-col" style="margin-bottom:20px;">
+            <div class="card"><div class="card-header"><span class="card-title">관련 화면정의</span></div><div class="card-body">
+              <div class="attach-item" style="border:none;padding:8px 0;"><span class="attach-ic"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="4.5" width="12" height="16" rx="1.5"/><path d="M9 11h6M9 15h6M9 8h3"/></svg></span><div style="flex:1;"><div class="attach-name">SCR-024 화면정의서 v1.2</div></div><span class="cell-sub">2025-05-20</span></div>
+              <div class="attach-item" style="border:none;padding:8px 0;"><span class="attach-ic"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="4.5" width="12" height="16" rx="1.5"/><path d="M9 11h6M9 15h6M9 8h3"/></svg></span><div style="flex:1;"><div class="attach-name">SCR-024 컴포넌트 명세 v1.0</div></div><span class="cell-sub">2025-05-20</span></div>
+              <div class="attach-item" style="border:none;padding:8px 0;"><span class="attach-ic"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="4.5" width="12" height="16" rx="1.5"/><path d="M9 11h6M9 15h6M9 8h3"/></svg></span><div style="flex:1;"><div class="attach-name">SCR-024 플로우 정의서 v1.0</div></div><span class="cell-sub">2025-05-20</span></div>
+              <div style="text-align:right;margin-top:6px;"><span class="card-link" style="color:var(--blue-dark);">전체 보기 →</span></div>
+            </div></div>
+
+            <div class="card"><div class="card-header"><span class="card-title">관련 요구사항</span></div><div class="card-body">
+              <div class="tc-row" style="border:none;padding:8px 0;"><span class="tc-id">REQ-112</span><span style="flex:1;">인증서 등록 및 신청</span><span class="badge badge-blue">진행 중</span></div>
+              <div class="tc-row" style="border:none;padding:8px 0;"><span class="tc-id">REQ-118</span><span style="flex:1;">인증서 파일 첨부</span><span class="badge badge-green">완료</span></div>
+              <div class="tc-row" style="border:none;padding:8px 0;"><span class="tc-id">REQ-121</span><span style="flex:1;">신청 내역 조회</span><span class="badge badge-blue">진행 중</span></div>
+              <div style="text-align:right;margin-top:6px;"><span class="card-link" style="color:var(--blue-dark);">전체 보기 →</span></div>
+            </div></div>
+          </div>
+
+          <div class="card"><div class="card-header"><span class="card-title">확정 이력</span></div><div class="card-body">
+            <div class="confirm-item"><span class="confirm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7"/></svg></span><div style="flex:1;"><div style="font-weight:700;font-size:13px;">v2 확정 <span class="cell-sub" style="font-weight:400;">박정우 팀장</span></div><div class="li-sub" style="margin-top:4px;">회원 유형별 신청 조건 안내 문구 및 버튼 레이블 수정 반영 확인하여 확정합니다.</div></div><span class="cell-sub">2025-05-28 11:15</span></div>
+            <div style="text-align:right;margin-top:10px;"><span class="card-link" style="color:var(--blue-dark);">전체 확정 이력 보기 →</span></div>
+          </div></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="card"><div class="card-header"><span class="card-title">버전 히스토리</span></div>
+            <div class="ver-hist-item sel"><div class="vh-top"><span style="font-weight:800;">v3 (최신)</span><span class="badge badge-green">검토 완료 (미확정)</span></div><div class="cell-sub">이지원 · 2025-05-30 17:42</div><span class="badge badge-orange" style="margin-top:6px;display:inline-block;">검토 의견 2건</span></div>
+            <div class="ver-hist-item"><div class="vh-top"><span style="font-weight:800;">v2</span><span class="badge badge-blue">확정됨</span></div><div class="cell-sub">박정우 · 2025-05-28 11:15</div><span class="card-link" style="color:var(--blue-dark);">확정 버전</span></div>
+            <div class="ver-hist-item"><div class="vh-top"><span style="font-weight:800;">v1</span><span class="badge badge-gray">검토 중</span></div><div class="cell-sub">이지원 · 2025-05-26 16:20</div><span class="card-link" style="color:var(--blue-dark);">검토 기록</span></div>
+            <div class="ver-hist-item"><div class="vh-top"><span style="font-weight:800;">v0.9</span><span class="badge badge-gray">초안</span></div><div class="cell-sub">이지원 · 2025-05-23 10:05</div></div>
+            <div style="text-align:right;padding:10px 16px;"><span class="card-link" style="color:var(--blue-dark);">전체 버전 보기 →</span></div>
+          </div>
+
+          <div class="card">
+            <div class="review-count"><span class="card-title" style="font-size:13.5px;">검토 의견 (미해결 2 / 전체 4)</span></div>
+            <div class="rv-item"><div class="rv-tag-row"><span class="badge badge-outline">UI/텍스트</span></div><div>입력 필드 도움말 문구를 더 명확하게 수정해주세요.</div><div class="rv-meta">박정우 · 2025-05-30</div><span class="badge badge-red" style="margin-top:5px;display:inline-block;">미해결</span></div>
+            <div class="rv-item"><div class="rv-tag-row"><span class="badge badge-outline">기능/정책</span></div><div>첨부 파일 제한 안내 문구를 추가해 주세요.</div><div class="rv-meta">최윤준 · 2025-05-29</div><span class="badge badge-red" style="margin-top:5px;display:inline-block;">미해결</span></div>
+            <div style="text-align:right;padding:10px 18px;"><span class="card-link" style="color:var(--blue-dark);">전체 의견 보기 →</span></div>
+          </div>
+
+          <div class="card"><div class="card-header"><span class="card-title">파일 첨부</span><span class="card-link">+ 파일 추가</span></div><div class="card-body">
+            <div class="file-row" style="border:none;"><span class="attach-ic"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.5 8.5 9.9 16a3 3 0 1 1-4.2-4.2l8.6-8.6a2 2 0 1 1 2.8 2.8L9 14.1a1 1 0 1 1-1.4-1.4l6.6-6.6"/></svg></span><div style="flex:1;"><div class="attach-name" style="color:var(--text-primary);">SCR-024_인증서신청_v3_프로토타입.zip</div><div class="cell-sub">12.4 MB · 2025-05-30</div></div></div>
+            <div class="file-row"><span class="attach-ic"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3.5h7l4 4V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"/><path d="M14 3.5V8h4"/></svg></span><div style="flex:1;"><div class="attach-name" style="color:var(--text-primary);">SCR-024_인증서신청_v3_스펙.pdf</div><div class="cell-sub">1.8 MB · 2025-05-30</div></div></div>
+            <div style="text-align:right;margin-top:6px;"><span class="card-link" style="color:var(--blue-dark);">전체 파일 보기 →</span></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

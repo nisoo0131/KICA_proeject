@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>요구사항 목록 · PlanFlow</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .filter-row2 { display:flex; gap:12px; align-items:center; margin-bottom:16px; }
+  .filter-row2 .select { max-width:220px; }
+  .filter-actions { margin-left:auto; display:flex; gap:8px; }
+  .list-toolbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .list-toolbar .count { font-size:13.5px; font-weight:700; }
+  .link-count { display:inline-flex; align-items:center; gap:4px; color:var(--blue-dark); font-weight:700; font-size:12.5px; }
+  .link-count svg { width:12px; height:12px; }
+  .menu-pop { position:absolute; right:24px; margin-top:6px; background:#fff; border:1px solid var(--border); border-radius:10px; box-shadow:0 8px 24px rgba(16,24,40,.12); width:150px; z-index:20; padding:6px; }
+  .menu-pop .mi { display:flex; align-items:center; gap:8px; padding:8px 10px; font-size:12.5px; border-radius:7px; color:var(--text-primary); }
+  .menu-pop .mi svg { width:14px; height:14px; color:var(--text-tertiary); }
+  .rel-row { position:relative; }
+  .foot-bar { display:flex; align-items:center; justify-content:space-between; margin-top:16px; font-size:12.5px; color:var(--text-secondary); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2c-3 4-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-7-6-11Z"/></svg></span>PlanFlow</div>
+    <nav class="nav-list">
+      <a class="nav-item" href="01-home-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1v-9"/></svg>홈</a>
+      <a class="nav-item" href="02-project-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18Z"/></svg>프로젝트</a>
+      <a class="nav-item active" href="04-requirement-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4.5" width="12" height="16" rx="1.5"/><path d="M9 4.5V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v.5"/><path d="M9 11h6M9 15h6M9 8h3"/></svg>요구사항</a>
+      <a class="nav-item" href="06-screen-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m4 17 5-5 3.5 3.5L17 11l3.5 3.5"/></svg>화면기획</a>
+      <a class="nav-item" href="10-test-issue-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg>테스트/이슈</a>
+    </nav>
+    <div class="sidebar-collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>접기</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg>검색 (프로젝트, 요구사항명, ID...)</div>
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.3 5.5 1.5 6.5H4.5C4.7 14.5 6 13 6 9Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="badge-dot">8</span></button>
+      <div class="user-block"><span class="avatar c1">김민</span><div class="user-text"><div class="user-name">김민수</div><div class="user-org">플랜플로우 주식회사</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+    </header>
+
+    <div class="page-content">
+      <div class="page-header"><div><h1>요구사항 목록</h1><div class="page-sub">전체 요구사항을 조회하고 관리하세요.</div></div></div>
+
+      <div class="filter-bar">
+        <div class="select"><span>전체 프로젝트</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="input"><span style="color:var(--text-tertiary);">요구사항명 또는 ID 검색</span></div>
+        <div class="select"><span>전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="select"><span>전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+      <div class="filter-row2">
+        <div class="select"><span>전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="select"><span>전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="filter-actions">
+          <button class="btn btn-ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.2M20 12a8 8 0 0 1-14 5.2"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg>초기화</button>
+          <button class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>요구사항 등록</button>
+        </div>
+      </div>
+
+      <div class="list-toolbar">
+        <span class="count">전체 88건</span>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7.5 11 4.5 4.5L16.5 11"/><path d="M5 19.5h14"/></svg>엑셀 다운로드</button>
+          <button class="btn btn-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14.2 3H9.8l-.4 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12a7 7 0 0 0 .1 1.2l-2 1.5 2 3.4 2.3-.9c.6.5 1.3.9 2 1.2l.4 2.6h4.4l.4-2.6a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5A7 7 0 0 0 19 12Z"/></svg>컬럼 설정</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+        <table class="table" style="min-width:1100px;">
+          <thead><tr><th>요구사항 ID</th><th>요구사항명</th><th>구분</th><th>우선순위</th><th>상태</th><th>관련 화면</th><th>담당자</th><th>요청자</th><th>최근 수정일 ↓</th><th>검토 대기</th><th>작업</th></tr></thead>
+          <tbody>
+            <tr class="rel-row"><td><a class="row-link" href="05-requirement-detail.html">REQ-103</a></td><td>비밀번호 재설정 정책 개선</td><td>기능</td><td><span class="badge badge-red">높음</span></td><td><span class="badge badge-gray">접수</span></td><td>없음</td><td><div class="person"><span class="avatar c1">김민</span>김민수</div></td><td><div class="person"><span class="avatar c2">이정</span>이정민</div></td><td>2025-05-30</td><td style="color:var(--red);font-weight:700;">5일</td>
+              <td><span class="kebab"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></span>
+                <div class="menu-pop">
+                  <div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.7"/></svg>상세 보기</div>
+                  <div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.2M20 12a8 8 0 0 1-14 5.2"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg>상태 변경</div>
+                  <div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 14.5 14.5 9.5"/><path d="M11 7.5l1.5-1.5a3.5 3.5 0 0 1 5 5L16 12.5"/><path d="M13 16.5 11.5 18a3.5 3.5 0 0 1-5-5L8 11.5"/></svg>화면 연결</div>
+                  <div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M4.5 20c1-3.5 4-5.5 7.5-5.5s6.5 2 7.5 5.5"/></svg>담당자 변경</div>
+                  <div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16v11H8.5L4 20.5Z"/></svg>검토 요청</div>
+                </div>
+              </td>
+            </tr>
+            <tr><td><a class="row-link" href="05-requirement-detail.html">REQ-121</a></td><td>휴대폰 인증 추가</td><td>기능</td><td><span class="badge badge-red">높음</span></td><td><span class="badge badge-orange">검토중</span></td><td><span class="link-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.5 14.5 14.5 9.5"/></svg>3개</span></td><td><div class="person"><span class="avatar c3">이지</span>이지현</div></td><td><div class="person"><span class="avatar c4">박성</span>박성우</div></td><td>2025-05-29</td><td style="color:var(--red);font-weight:700;">2일</td><td><span class="kebab"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></span></td></tr>
+            <tr><td><a class="row-link" href="05-requirement-detail.html">REQ-118</a></td><td>메인 대시보드 KPI 위젯 추가</td><td>기능</td><td><span class="badge badge-gray">보통</span></td><td><span class="badge badge-blue">확정</span></td><td><span class="link-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.5 14.5 14.5 9.5"/></svg>5개</span></td><td><div class="person"><span class="avatar c5">최윤</span>최윤리</div></td><td><div class="person"><span class="avatar c1">김민</span>김민수</div></td><td>2025-05-28</td><td>-</td><td><span class="kebab"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></span></td></tr>
+            <tr><td><a class="row-link" href="05-requirement-detail.html">REQ-110</a></td><td>알림 설정 고도화</td><td>기능</td><td><span class="badge badge-gray">보통</span></td><td><span class="badge badge-teal">화면정의중</span></td><td><span class="link-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.5 14.5 14.5 9.5"/></svg>2개</span></td><td><div class="person"><span class="avatar c6">박정</span>박정우</div></td><td><div class="person"><span class="avatar c3">이지</span>이지현</div></td><td>2025-05-27</td><td>-</td><td><span class="kebab"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></span></td></tr>
+            <tr><td><a class="row-link" href="05-requirement-detail.html">REQ-106</a></td><td>프로젝트 템플릿 기능 추가</td><td>기능</td><td><span class="badge badge-gray">보통</span></td><td><span class="badge badge-purple">디자인중</span></td><td><span class="link-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.5 14.5 14.5 9.5"/></svg>4개</span></td><td><div class="person"><span class="avatar c7">한소</span>한소연</div></td><td><div class="person"><span class="avatar c2">이정</span>이정민</div></td><td>2025-05-26</td><td>-</td><td><span class="kebab"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></span></td></tr>
+            <tr><td><a class="row-link" href="05-requirement-detail.html">REQ-104</a></td><td>파일 업로드 용량 확대</td><td>기능</td><td><span class="badge badge-gray">낮음</span></td><td><span class="badge badge-orange">테스트중</span></td><td><span class="link-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.5 14.5 14.5 9.5"/></svg>1개</span></td><td><div class="person"><span class="avatar c5">최윤</span>최윤리</div></td><td><div class="person"><span class="avatar c4">박성</span>박성우</div></td><td>2025-05-23</td><td>-</td><td><span class="kebab"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></span></td></tr>
+            <tr><td><a class="row-link" href="05-requirement-detail.html">REQ-099</a></td><td>프로젝트 즐겨찾기</td><td>기능</td><td><span class="badge badge-gray">낮음</span></td><td><span class="badge badge-blue">확정</span></td><td><span class="link-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.5 14.5 14.5 9.5"/></svg>2개</span></td><td><div class="person"><span class="avatar c1">김민</span>김민수</div></td><td><div class="person"><span class="avatar c2">이정</span>이정민</div></td><td>2025-05-22</td><td>-</td><td><span class="kebab"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></span></td></tr>
+            <tr><td><a class="row-link" href="05-requirement-detail.html">REQ-095</a></td><td>다크 모드 지원</td><td>기능</td><td><span class="badge badge-gray">낮음</span></td><td><span class="badge badge-gray">보류</span></td><td>없음</td><td><div class="person"><span class="avatar c3">이지</span>이지현</div></td><td><div class="person"><span class="avatar c1">김민</span>김민수</div></td><td>2025-05-20</td><td>-</td><td><span class="kebab"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></span></td></tr>
+            <tr><td><a class="row-link" href="05-requirement-detail.html">REQ-090</a></td><td>결제 라인 요청</td><td>개선</td><td><span class="badge badge-red">높음</span></td><td><span class="badge badge-orange">검토중</span></td><td><span class="link-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.5 14.5 14.5 9.5"/></svg>3개</span></td><td><div class="person"><span class="avatar c6">박정</span>박정우</div></td><td><div class="person"><span class="avatar c7">한소</span>한소연</div></td><td>2025-05-19</td><td style="color:var(--red);font-weight:700;">1일</td><td><span class="kebab"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></span></td></tr>
+            <tr><td><a class="row-link" href="05-requirement-detail.html">REQ-084</a></td><td>히스토리 로그 조회</td><td>개선</td><td><span class="badge badge-gray">보통</span></td><td><span class="badge badge-blue">확정</span></td><td><span class="link-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.5 14.5 14.5 9.5"/></svg>2개</span></td><td><div class="person"><span class="avatar c5">최윤</span>최윤리</div></td><td><div class="person"><span class="avatar c4">박성</span>박성우</div></td><td>2025-05-16</td><td>-</td><td><span class="kebab"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></span></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <div class="foot-bar">
+        <div class="select" style="width:120px;"><span>페이지당 보기 10</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="pagination">
+          <div class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></div>
+          <div class="page-btn active">1</div><div class="page-btn">2</div><div class="page-btn">3</div><div class="page-btn">4</div><div class="page-btn">5</div><div class="page-btn">…</div><div class="page-btn">9</div>
+          <div class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></div>
+        </div>
+        <span>1-10 / 88건</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

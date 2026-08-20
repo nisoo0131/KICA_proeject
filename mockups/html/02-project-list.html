@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>프로젝트 목록 · PlanFlow</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .toolbar { display:flex; gap:10px; margin-bottom:20px; align-items:center; }
+  .toolbar .select, .toolbar .input { flex:1; }
+  .view-toggle { display:flex; gap:4px; flex-shrink:0; }
+  .view-toggle .vbtn { width:38px; height:38px; border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--text-tertiary); }
+  .view-toggle .vbtn.active { background:var(--blue-light); border-color:var(--blue-light); color:var(--blue-dark); }
+  .view-toggle svg { width:17px; height:17px; }
+  .progress-cell { display:flex; flex-direction:column; gap:5px; width:90px; }
+  .progress-cell .pv { font-weight:700; font-size:12.5px; }
+  .foot-bar { display:flex; align-items:center; justify-content:space-between; margin-top:16px; font-size:12.5px; color:var(--text-secondary); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2c-3 4-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-7-6-11Z"/></svg></span>PlanFlow</div>
+    <nav class="nav-list">
+      <a class="nav-item" href="01-home-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1v-9"/></svg>홈</a>
+      <a class="nav-item active" href="02-project-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18Z"/></svg>프로젝트</a>
+      <a class="nav-item" href="04-requirement-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4.5" width="12" height="16" rx="1.5"/><path d="M9 4.5V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v.5"/><path d="M9 11h6M9 15h6M9 8h3"/></svg>요구사항</a>
+      <a class="nav-item" href="06-screen-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m4 17 5-5 3.5 3.5L17 11l3.5 3.5"/></svg>화면기획</a>
+      <a class="nav-item" href="10-test-issue-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/><path d="M8 15h8"/></svg>테스트/이슈</a>
+    </nav>
+    <div class="sidebar-collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>접기</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg>검색 (프로젝트, 요구사항, 화면...)</div>
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.3 5.5 1.5 6.5H4.5C4.7 14.5 6 13 6 9Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="badge-dot">8</span></button>
+      <div class="user-block"><span class="avatar c1">김민</span><div class="user-text"><div class="user-name">김민수</div><div class="user-org">플랜플로우 주식회사</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+    </header>
+
+    <div class="page-content">
+      <div class="page-header"><div><h1>프로젝트 목록</h1><div class="page-sub">전체 프로젝트의 진행 현황을 확인하고 관리하세요.</div></div></div>
+
+      <div class="toolbar">
+        <div class="input input-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg><span style="color:var(--text-tertiary);">프로젝트명 검색</span></div>
+        <div class="select"><span>전체 상태</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="select"><span>전체 담당자</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="select"><span>전체 종료 예정일</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="select"><span>최신 변경순</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="view-toggle">
+          <div class="vbtn active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></div>
+          <div class="vbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></div>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-top"><span class="stat-label">전체 프로젝트</span><span class="stat-icon" style="background:var(--gray-light);color:var(--gray);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18Z"/></svg></span></div><div class="stat-value">12</div><div class="stat-sub">전체 개수</div></div>
+        <div class="stat-card"><div class="stat-top"><span class="stat-label">지연 프로젝트</span><span class="stat-icon" style="background:var(--red-light);color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span></div><div class="stat-value">3</div><div class="stat-sub">전체의 25%</div></div>
+        <div class="stat-card"><div class="stat-top"><span class="stat-label">테스트 중</span><span class="stat-icon" style="background:var(--orange-light);color:var(--orange);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg></span></div><div class="stat-value">2</div><div class="stat-sub">전체의 17%</div></div>
+        <div class="stat-card"><div class="stat-top"><span class="stat-label">완료 프로젝트</span><span class="stat-icon" style="background:var(--green-light);color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.5 2.5L16 9.5"/></svg></span></div><div class="stat-value">4</div><div class="stat-sub">전체의 33%</div></div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+        <table class="table" style="min-width:1000px;">
+          <thead><tr><th>프로젝트명</th><th>상태</th><th>현재 단계</th><th>진행률</th><th>검토 대기</th><th>이슈</th><th>담당자</th><th>시작일</th><th>종료 예정일</th><th>최근 변경</th></tr></thead>
+          <tbody>
+            <tr><td><div class="cell-name">통합인증 리뉴얼</div><div class="cell-sub">디지털플랫폼팀</div></td><td><span class="badge badge-blue">진행중</span></td><td>UI/UX 디자인</td><td><div class="progress-cell"><span class="pv">72%</span><div class="progress-track"><div class="progress-fill" style="width:72%;"></div></div></div></td><td><span style="color:var(--orange);font-weight:700;">5</span></td><td>3</td><td><div class="person"><span class="avatar c1">김민</span>김민수</div></td><td>2025-04-30</td><td>2025-06-30</td><td>2025-06-03 14:30</td></tr>
+            <tr><td><div class="cell-name">KICA 대시보드 고도화</div><div class="cell-sub">데이터서비스팀</div></td><td><span class="badge badge-red">지연</span></td><td>개발</td><td><div class="progress-cell"><span class="pv">48%</span><div class="progress-track"><div class="progress-fill" style="width:48%;"></div></div></div></td><td><span style="color:var(--orange);font-weight:700;">8</span></td><td>7</td><td><div class="person"><span class="avatar c2">이지</span>이지현</div></td><td>2025-05-20</td><td style="color:var(--red);font-weight:700;">2025-05-28</td><td>2025-06-02 09:15</td></tr>
+            <tr><td><div class="cell-name">모바일 신청 개선</div><div class="cell-sub">모바일서비스팀</div></td><td><span class="badge badge-blue">진행중</span></td><td>UI/UX 디자인</td><td><div class="progress-cell"><span class="pv">33%</span><div class="progress-track"><div class="progress-fill" style="width:33%;"></div></div></div></td><td><span style="color:var(--orange);font-weight:700;">3</span></td><td>2</td><td><div class="person"><span class="avatar c3">박정</span>박정우</div></td><td>2025-06-15</td><td>2025-06-30</td><td>2025-06-01 17:40</td></tr>
+            <tr><td><div class="cell-name">회원센터 개편</div><div class="cell-sub">CX혁신팀</div></td><td><span class="badge badge-orange">테스트중</span></td><td>테스트</td><td><div class="progress-cell"><span class="pv">88%</span><div class="progress-track"><div class="progress-fill" style="width:88%;"></div></div></div></td><td><span style="color:var(--orange);font-weight:700;">2</span></td><td>1</td><td><div class="person"><span class="avatar c4">최유</span>최유리</div></td><td>2025-06-10</td><td>2025-06-30</td><td>2025-05-31 11:20</td></tr>
+            <tr><td><div class="cell-name">알림 시스템 고도화</div><div class="cell-sub">플랫폼개발팀</div></td><td><span class="badge badge-green">완료</span></td><td>배포 완료</td><td><div class="progress-cell"><span class="pv">100%</span><div class="progress-track"><div class="progress-fill green" style="width:100%;"></div></div></div></td><td>0</td><td>0</td><td><div class="person"><span class="avatar c5">이재</span>이재훈</div></td><td>2025-04-20</td><td>2025-06-20</td><td>2025-06-20 16:05</td></tr>
+            <tr><td><div class="cell-name">정산 프로세스 자동화</div><div class="cell-sub">경영지원팀</div></td><td><span class="badge badge-red">지연</span></td><td>개발</td><td><div class="progress-cell"><span class="pv">92%</span><div class="progress-track"><div class="progress-fill" style="width:92%;"></div></div></div></td><td>1</td><td>0</td><td><div class="person"><span class="avatar c6">한소</span>한소연</div></td><td>2025-05-20</td><td style="color:var(--red);font-weight:700;">2025-05-20</td><td>2025-05-20 10:00</td></tr>
+            <tr><td><div class="cell-name">마이페이지 개편</div><div class="cell-sub">디자인팀</div></td><td><span class="badge badge-blue">진행중</span></td><td>UI/UX 디자인</td><td><div class="progress-cell"><span class="pv">26%</span><div class="progress-track"><div class="progress-fill" style="width:26%;"></div></div></div></td><td><span style="color:var(--orange);font-weight:700;">4</span></td><td>2</td><td><div class="person"><span class="avatar c7">정다</span>정다은</div></td><td>2025-06-01</td><td>2025-07-15</td><td>2025-06-01 13:10</td></tr>
+            <tr><td><div class="cell-name">보고서 자동 생성</div><div class="cell-sub">데이터서비스팀</div></td><td><span class="badge badge-orange">테스트중</span></td><td>테스트</td><td><div class="progress-cell"><span class="pv">60%</span><div class="progress-track"><div class="progress-fill" style="width:60%;"></div></div></div></td><td>1</td><td>1</td><td><div class="person"><span class="avatar c8">이수</span>이수민</div></td><td>2025-05-10</td><td>2025-06-25</td><td>2025-05-30 15:45</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <div class="foot-bar">
+        <span>전체 12개 중 1-8 표시</span>
+        <div class="pagination">
+          <div class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></div>
+          <div class="page-btn active">1</div>
+          <div class="page-btn">2</div>
+          <div class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></div>
+        </div>
+        <div class="select" style="width:120px;"><span>페이지당 보기 10</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

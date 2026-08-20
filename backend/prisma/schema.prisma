@@ -1,0 +1,342 @@
+// PlanFlow database schema (Supabase Postgres).
+// Mirrors the data model documented in /CLAUDE.md and the PRD (docs/project_planning_design_platform_PRD_3tier.md).
+// Enum members use English identifiers; Korean labels are the source of truth in CLAUDE.md and are mapped
+// to these members in the frontend/backend label maps rather than stored as enum identifiers.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Runtime connections go through Supabase's transaction pooler (port 6543), which multiplexes
+  // many short-lived clients. Migrations need a session-mode connection (port 5432) instead.
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  PLANNER // 기획자
+  UIUX // UI/UX
+  DEVELOPER // 개발자
+  BUSINESS // 사업부
+  ADMIN // 관리자
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  role      Role     @default(PLANNER)
+  company   String?
+  createdAt DateTime @default(now())
+
+  ownedProjects  Project[]        @relation("ProjectOwner")
+  ownedReqs      Requirement[]    @relation("RequirementOwner")
+  requestedReqs  Requirement[]    @relation("RequirementRequester")
+  ownedScreens   Screen[]         @relation("ScreenOwner")
+  wireframes     Wireframe[]      @relation("WireframeAuthor")
+  hifiDesigns    HiFiDesign[]     @relation("HiFiAuthor")
+  testScenarios  TestScenario[]   @relation("TestOwner")
+  issues         Issue[]          @relation("IssueOwner")
+  decisionLogs   DecisionLog[]    @relation("DecisionBy")
+  reviewComments ReviewComment[]  @relation("CommentAuthor")
+  activityLogs   ActivityLog[]    @relation("ActivityActor")
+}
+
+enum ProjectStatus {
+  PREPARING // 준비중
+  IN_PROGRESS // 진행중
+  DELAYED // 지연
+  TESTING // 테스트중
+  DONE // 완료
+  ON_HOLD // 보류
+}
+
+enum ProjectStage {
+  REQUIREMENT // 요구사항
+  SCHEDULE // 일정수립
+  SCREEN_DEF // 화면정의
+  WIREFRAME // 와이어프레임
+  HIFI // Hi-Fi 디자인
+  INTEGRATION_TEST // 통합테스트
+  DONE // 완료
+}
+
+model Project {
+  id           String        @id @default(cuid())
+  code         String        @unique
+  name         String
+  client       String?
+  ownerId      String?
+  owner        User?         @relation("ProjectOwner", fields: [ownerId], references: [id])
+  description  String?
+  status       ProjectStatus @default(PREPARING)
+  currentStage ProjectStage  @default(REQUIREMENT)
+  // Computed on write per CLAUDE.md Risk 6: stage weighting + required-artifact confirmation rate,
+  // never a raw user-entered percentage.
+  progressRate Int           @default(0)
+  startDate    DateTime?
+  dueDate      DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  requirements  Requirement[]
+  screens       Screen[]
+  testScenarios TestScenario[]
+  issues        Issue[]
+  decisionLogs  DecisionLog[]
+  activityLogs  ActivityLog[]
+}
+
+enum RequirementType {
+  NEW // 신규
+  IMPROVEMENT // 개선
+  POLICY // 정책
+  BUG // 오류
+}
+
+enum Priority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum RequirementStatus {
+  RECEIVED // 접수
+  IN_REVIEW // 검토중
+  CONFIRMED // 확정
+  SCREEN_DEF // 화면정의중
+  DESIGN // 디자인중
+  TESTING // 테스트중
+  DONE // 완료
+  ON_HOLD // 보류
+}
+
+model Requirement {
+  id          String             @id @default(cuid())
+  code        String             @unique
+  projectId   String
+  project     Project            @relation(fields: [projectId], references: [id])
+  title       String
+  background  String?
+  description String?
+  type        RequirementType    @default(NEW)
+  priority    Priority           @default(MEDIUM)
+  status      RequirementStatus  @default(RECEIVED)
+  requesterId String?
+  requester   User?              @relation("RequirementRequester", fields: [requesterId], references: [id])
+  ownerId     String?
+  owner       User?              @relation("RequirementOwner", fields: [ownerId], references: [id])
+  requestedAt DateTime?
+  targetDate  DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  screens       RequirementScreenMap[]
+  testRelations TestRelation[]
+  issues        Issue[]
+  comments      ReviewComment[]        @relation("RequirementComments")
+}
+
+enum ScreenStatus {
+  PLANNING // 기획중
+  IN_REVIEW // 검토중
+  WIREFRAME // 와이어프레임중
+  DESIGN // 디자인중
+  CONFIRMED // 확정
+  ON_HOLD // 보류
+}
+
+model Screen {
+  id        String       @id @default(cuid())
+  code      String       @unique
+  projectId String
+  project   Project      @relation(fields: [projectId], references: [id])
+  name      String
+  menuPath  String?
+  purpose   String?
+  status    ScreenStatus @default(PLANNING)
+  ownerId   String?
+  owner     User?        @relation("ScreenOwner", fields: [ownerId], references: [id])
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  requirements  RequirementScreenMap[]
+  wireframes    Wireframe[]
+  hifiDesigns   HiFiDesign[]
+  testRelations TestRelation[]
+  issues        Issue[]
+}
+
+// N:M requirement <-> screen link. Unlinking removes the row, not the entities (undo-able in the UI).
+model RequirementScreenMap {
+  requirementId String
+  requirement   Requirement @relation(fields: [requirementId], references: [id])
+  screenId      String
+  screen        Screen      @relation(fields: [screenId], references: [id])
+  createdAt     DateTime    @default(now())
+  createdBy     String?
+
+  @@id([requirementId, screenId])
+}
+
+// Confirmed rows are locked at the application layer (Risk 7): a new version row is appended,
+// never mutated in place, once status = CONFIRMED.
+enum ArtifactStatus {
+  DRAFT // 작성중
+  REVIEW_REQUESTED // 검토요청
+  REVISING // 수정중
+  CONFIRMED // 확정
+  ON_HOLD // 보류
+}
+
+model Wireframe {
+  id        String         @id @default(cuid())
+  screenId  String
+  screen    Screen         @relation(fields: [screenId], references: [id])
+  version   String
+  link      String?
+  status    ArtifactStatus @default(DRAFT)
+  authorId  String?
+  author    User?          @relation("WireframeAuthor", fields: [authorId], references: [id])
+  createdAt DateTime       @default(now())
+}
+
+model HiFiDesign {
+  id        String         @id @default(cuid())
+  screenId  String
+  screen    Screen         @relation(fields: [screenId], references: [id])
+  version   String
+  link      String?
+  status    ArtifactStatus @default(DRAFT)
+  authorId  String?
+  author    User?          @relation("HiFiAuthor", fields: [authorId], references: [id])
+  createdAt DateTime       @default(now())
+}
+
+enum TestStatus {
+  NOT_RUN // 미실행
+  PASSED // 성공
+  FAILED // 실패
+  RETEST // 재테스트 필요
+}
+
+model TestScenario {
+  id        String       @id @default(cuid())
+  code      String       @unique
+  projectId String
+  project   Project      @relation(fields: [projectId], references: [id])
+  title     String
+  status    TestStatus   @default(NOT_RUN)
+  ownerId   String?
+  owner     User?        @relation("TestOwner", fields: [ownerId], references: [id])
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  relations TestRelation[]
+  issues    Issue[]
+}
+
+// requirementId/screenId nullable: a scenario can validate a requirement, a screen, or both.
+model TestRelation {
+  id            String       @id @default(cuid())
+  testId        String
+  test          TestScenario @relation(fields: [testId], references: [id])
+  requirementId String?
+  requirement   Requirement? @relation(fields: [requirementId], references: [id])
+  screenId      String?
+  screen        Screen?      @relation(fields: [screenId], references: [id])
+}
+
+enum IssueSeverity {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum IssueStatus {
+  RECEIVED // 접수
+  IN_PROGRESS // 조치중
+  CONFIRM_WAIT // 확인대기
+  DONE // 완료
+  ON_HOLD // 보류
+}
+
+model Issue {
+  id                   String        @id @default(cuid())
+  code                 String        @unique
+  projectId            String
+  project              Project       @relation(fields: [projectId], references: [id])
+  title                String
+  description          String?
+  severity             IssueSeverity @default(MEDIUM)
+  status               IssueStatus   @default(RECEIVED)
+  ownerId              String?
+  owner                User?         @relation("IssueOwner", fields: [ownerId], references: [id])
+  relatedRequirementId String?
+  relatedRequirement   Requirement?  @relation(fields: [relatedRequirementId], references: [id])
+  relatedScreenId      String?
+  relatedScreen        Screen?       @relation(fields: [relatedScreenId], references: [id])
+  relatedTestId        String?
+  relatedTest          TestScenario? @relation(fields: [relatedTestId], references: [id])
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+}
+
+// Polymorphic via relatedEntityType/relatedEntityId (e.g. "requirement" / "wireframe"), per CLAUDE.md.
+model DecisionLog {
+  id                String   @id @default(cuid())
+  projectId         String
+  project           Project  @relation(fields: [projectId], references: [id])
+  title             String
+  decision          String
+  reason            String?
+  decidedById       String?
+  decidedBy         User?    @relation("DecisionBy", fields: [decidedById], references: [id])
+  decidedAt         DateTime @default(now())
+  relatedEntityType String?
+  relatedEntityId   String?
+}
+
+enum CommentType {
+  GENERAL // 일반 의견
+  CHANGE_REQUEST // 수정 요청
+  CONFIRM_REQUEST // 확인 요청
+  DECISION_NEEDED // 의사결정 필요
+}
+
+enum CommentStatus {
+  UNRESOLVED // 미해결
+  RESOLVED // 해결됨
+}
+
+// Polymorphic via targetType/targetId (e.g. "requirement" / "wireframe" / "hifi_design").
+model ReviewComment {
+  id            String        @id @default(cuid())
+  targetType    String
+  targetId      String
+  authorId      String?
+  author        User?         @relation("CommentAuthor", fields: [authorId], references: [id])
+  type          CommentType   @default(GENERAL)
+  content       String
+  status        CommentStatus @default(UNRESOLVED)
+  createdAt     DateTime      @default(now())
+  requirementId String?
+  requirement   Requirement?  @relation("RequirementComments", fields: [requirementId], references: [id])
+}
+
+// Polymorphic via targetType/targetId; feeds the home dashboard's "최근 변경사항" feed.
+model ActivityLog {
+  id          String   @id @default(cuid())
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id])
+  actorId     String?
+  actor       User?    @relation("ActivityActor", fields: [actorId], references: [id])
+  targetType  String
+  targetId    String
+  eventType   String
+  beforeValue String?
+  afterValue  String?
+  createdAt   DateTime @default(now())
+}

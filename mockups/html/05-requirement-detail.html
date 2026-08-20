@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>요구사항 상세 · PlanFlow</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .summary-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:22px 24px; display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px; }
+  .summary-left .req-id { color:var(--blue-dark); font-weight:800; font-size:14px; }
+  .summary-left .req-title { font-size:19px; font-weight:800; margin:6px 0 10px; }
+  .summary-mid { display:flex; gap:34px; padding-top:6px; }
+  .summary-mid .m-label { font-size:11.5px; color:var(--text-tertiary); margin-bottom:6px; }
+  .summary-actions { display:flex; gap:8px; align-self:flex-start; }
+  .split { display:grid; grid-template-columns: 1.5fr 1fr; gap:20px; align-items:start; }
+  .body-block { margin-bottom:22px; }
+  .body-block h3 { font-size:14.5px; font-weight:700; margin-bottom:10px; }
+  .body-block p { font-size:13px; line-height:1.7; color:var(--text-primary); }
+  .bullets { padding-left:0; }
+  .bullets li { list-style:none; font-size:13px; line-height:1.9; padding-left:14px; position:relative; }
+  .bullets li::before { content:"•"; position:absolute; left:0; color:var(--text-tertiary); }
+  .attach-item { display:flex; align-items:center; gap:10px; padding:10px 0; border-top:1px solid var(--border-light); }
+  .attach-item:first-child { border-top:none; }
+  .attach-ic { width:32px; height:32px; border-radius:8px; background:var(--gray-light); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); flex-shrink:0; }
+  .attach-ic svg { width:15px; height:15px; }
+  .attach-name { font-size:13px; font-weight:600; color:var(--blue-dark); }
+  .attach-sub { font-size:11.5px; color:var(--text-tertiary); }
+  .screen-card { display:flex; gap:12px; padding:13px 0; border-top:1px solid var(--border-light); }
+  .screen-card:first-child { border-top:none; }
+  .screen-thumb { width:64px; height:48px; border-radius:7px; background:var(--gray-light); border:1px solid var(--border-light); flex-shrink:0; }
+  .screen-id { color:var(--blue-dark); font-weight:700; font-size:13px; }
+  .screen-name { font-size:13px; font-weight:600; margin:2px 0 6px; }
+  .screen-meta { display:flex; align-items:center; gap:8px; }
+  .screen-foot { font-size:11px; color:var(--text-tertiary); margin-top:5px; }
+  .tc-row { display:flex; align-items:center; gap:10px; padding:11px 0; border-top:1px solid var(--border-light); font-size:12.5px; }
+  .tc-row:first-child { border-top:none; }
+  .tc-id { color:var(--blue-dark); font-weight:700; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2c-3 4-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-7-6-11Z"/></svg></span>PlanFlow</div>
+    <nav class="nav-list">
+      <a class="nav-item" href="01-home-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1v-9"/></svg>홈</a>
+      <a class="nav-item" href="02-project-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18Z"/></svg>프로젝트</a>
+      <a class="nav-item active" href="04-requirement-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4.5" width="12" height="16" rx="1.5"/><path d="M9 4.5V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v.5"/><path d="M9 11h6M9 15h6M9 8h3"/></svg>요구사항</a>
+      <a class="nav-item" href="06-screen-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m4 17 5-5 3.5 3.5L17 11l3.5 3.5"/></svg>화면기획</a>
+      <a class="nav-item" href="10-test-issue-list.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M10 3v6l-5.5 9a1.8 1.8 0 0 0 1.5 2.7h12a1.8 1.8 0 0 0 1.5-2.7L14 9V3"/></svg>테스트/이슈</a>
+    </nav>
+    <div class="sidebar-collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>접기</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg>검색 (프로젝트, 요구사항, 화면...)</div>
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.3 5.5 1.5 6.5H4.5C4.7 14.5 6 13 6 9Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="badge-dot">8</span></button>
+      <div class="user-block"><span class="avatar c1">김민</span><div class="user-text"><div class="user-name">김민수</div><div class="user-org">플랜플로우 주식회사</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+    </header>
+
+    <div class="page-content">
+      <div class="breadcrumb"><a href="04-requirement-list.html">요구사항</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg><span class="current">REQ-103</span></div>
+      <div class="page-header"><div><h1>요구사항 상세</h1><div class="page-sub">요구사항의 상세 정보와 연관 정보를 확인하고 관리할 수 있습니다.</div></div></div>
+
+      <div class="summary-card">
+        <div class="summary-left">
+          <div class="req-id">REQ-103</div>
+          <div class="req-title">비밀번호 재설정 정책 개선</div>
+          <div style="display:flex;gap:8px;"><span class="badge badge-green">진행 중</span><span class="badge badge-red">↑ 높음</span></div>
+        </div>
+        <div class="summary-mid">
+          <div><div class="m-label">담당자</div><div class="person"><span class="avatar c3">이지</span><div><div class="p-name">이지현</div><div class="p-sub">UX 기획팀</div></div></div></div>
+          <div><div class="m-label">최종 수정일</div><div style="font-size:13px;font-weight:600;">2025-05-28 14:35</div><div class="p-sub">이지현</div></div>
+        </div>
+        <div class="summary-actions">
+          <button class="btn btn-outline-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16v11H8.5L4 20.5Z"/></svg>검토 요청</button>
+          <button class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7"/></svg>확정</button>
+          <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 4.5 4.5 4.5L8 20.5H3.5V16Z"/></svg>수정</button>
+          <button class="btn"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
+        </div>
+      </div>
+
+      <div class="warn-banner">
+        <div class="warn-banner-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 21.5 20h-19Z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.3" fill="currentColor"/></svg>이 요구사항은 <b>3개 화면</b>, <b>2개 테스트 시나리오</b>와 연관되어 있습니다. 변경 시 관련 항목의 재검토가 필요할 수 있습니다.</div>
+        <button class="btn btn-sm" style="background:#fff;">연관 항목 보기</button>
+      </div>
+
+      <div class="split">
+        <div>
+          <div class="tabs">
+            <div class="tab active">상세 내용</div>
+            <div class="tab">관련 화면 (3)</div>
+            <div class="tab">검토 의견 (5)</div>
+            <div class="tab">변경 이력 (7)</div>
+          </div>
+
+          <div class="body-block">
+            <h3>배경 / 목적</h3>
+            <p>최근 보안 정책 강화 및 고객 요청에 따라 비밀번호 재설정 정책을 개선합니다. 사용자 보안성을 높이고, 계정 탈취 및 무단 접근을 예방하기 위해 비밀번호 재설정 시 본인 확인 절차와 비밀번호 정책을 강화하고자 합니다.</p>
+          </div>
+
+          <div class="body-block">
+            <h3>상세 내용</h3>
+            <ul class="bullets">
+              <li>비밀번호 재설정 시 본인 확인 절차 강화 (이메일 인증 + SMS 인증)</li>
+              <li>비밀번호 최소 길이 10자 이상, 영문/숫자/특수문자 포함 필수</li>
+              <li>최근 5회 사용한 비밀번호 재사용 제한</li>
+              <li>비밀번호 만료 기간 90일로 적용</li>
+              <li>재설정 완료 시 모든 활성 세션 로그아웃 처리</li>
+              <li>실패 시도 5회 이상 시 30분간 재설정 제한</li>
+            </ul>
+          </div>
+
+          <div class="two-col" style="margin-bottom:22px;">
+            <div><h3 style="font-size:13px;color:var(--text-tertiary);font-weight:600;margin-bottom:8px;">요청자</h3><div class="person"><span class="avatar c6">박정</span><div><div class="p-name">박정우</div><div class="p-sub">마케팅팀</div></div></div></div>
+            <div><h3 style="font-size:13px;color:var(--text-tertiary);font-weight:600;margin-bottom:8px;">목표 반영일</h3><div style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-tertiary);"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>2025-06-20</div></div>
+          </div>
+
+          <div class="body-block">
+            <h3>첨부 / 참고 링크</h3>
+            <div class="attach-item"><span class="attach-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7l4 4V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"/><path d="M14 3.5V8h4"/></svg></span><div><div class="attach-name">비밀번호 재설정 정책 개선 요구서_v1.2.pdf</div><div class="attach-sub">210 KB</div></div></div>
+            <div class="attach-item"><span class="attach-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"/><path d="M14 4h6v6"/><path d="M20 4 11 13"/></svg></span><div><div class="attach-name">보안 정책 가이드 (v2.1)</div><div class="attach-sub">https://confluence.planflow.io/security/password-policy</div></div></div>
+            <div class="attach-item"><span class="attach-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 14.5 14.5 9.5"/><path d="M11 7.5l1.5-1.5a3.5 3.5 0 0 1 5 5L16 12.5"/><path d="M13 16.5 11.5 18a3.5 3.5 0 0 1-5-5L8 11.5"/></svg></span><div><div class="attach-name">비밀번호 정책 변경 이력</div><div class="attach-sub">https://confluence.planflow.io/display/SEC/PW-Change-History</div></div></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-header"><span class="card-title">관련 화면 (3)</span><span class="card-link">전체 화면 보기</span></div>
+            <div class="card-body">
+              <div class="screen-card"><div class="screen-thumb"></div><div style="flex:1;"><div class="screen-id">SCR-210</div><div class="screen-name">비밀번호 재설정 요청</div><div class="screen-meta"><span class="badge badge-blue">진행 중</span><span class="cell-sub">v1.3</span></div><div class="screen-foot">최종 수정일 2025-05-27 · 이지현</div></div></div>
+              <div class="screen-card"><div class="screen-thumb"></div><div style="flex:1;"><div class="screen-id">SCR-211</div><div class="screen-name">본인 인증 (이메일/SMS)</div><div class="screen-meta"><span class="badge badge-orange">설계 중</span><span class="cell-sub">v1.2</span></div><div class="screen-foot">최종 수정일 2025-05-26 · 이지현</div></div></div>
+              <div class="screen-card"><div class="screen-thumb"></div><div style="flex:1;"><div class="screen-id">SCR-212</div><div class="screen-name">새 비밀번호 설정</div><div class="screen-meta"><span class="badge badge-blue">진행 중</span><span class="cell-sub">v1.3</span></div><div class="screen-foot">최종 수정일 2025-05-28 · 이지현</div></div></div>
+              <div style="text-align:right;margin-top:6px;"><span class="card-link" style="color:var(--blue-dark);">관련 화면 전체 보기 →</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><span class="card-title">관련 테스트 시나리오 (2)</span></div>
+            <div class="card-body">
+              <div class="tc-row"><span class="tc-id">TC-045</span><span style="flex:1;">비밀번호 재설정 - 이메일 인증 시나리오</span><span class="badge badge-green">승인</span></div>
+              <div class="tc-row"><span class="tc-id">TC-046</span><span style="flex:1;">비밀번호 재설정 - SMS 인증 시나리오</span><span class="badge badge-green">승인</span></div>
+              <div style="text-align:right;margin-top:6px;"><span class="card-link" style="color:var(--blue-dark);">전체 테스트 시나리오 보기 →</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
