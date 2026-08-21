@@ -24,12 +24,17 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  role      Role     @default(PLANNER)
-  company   String?
-  createdAt DateTime @default(now())
+  id    String @id @default(cuid())
+  name  String
+  email String @unique
+  role  Role   @default(PLANNER)
+  // Nullable on purpose: a user row without a hash simply cannot log in, which lets us seed or
+  // import people (as 담당자/요청자 references) before they have credentials. Never returned by
+  // the API — the shared PrismaClient in src/lib/prisma.ts omits this field globally, and only
+  // the login handler opts back in to read it.
+  passwordHash String?
+  company      String?
+  createdAt    DateTime @default(now())
 
   ownedProjects  Project[]        @relation("ProjectOwner")
   ownedReqs      Requirement[]    @relation("RequirementOwner")

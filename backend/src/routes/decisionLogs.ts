@@ -2,7 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { asyncHandler } from "../lib/asyncHandler";
-import type { AuthedRequest } from "../middleware/auth";
+import { requirePermission, type AuthedRequest } from "../middleware/auth";
 
 export const decisionLogsRouter = Router();
 
@@ -30,6 +30,7 @@ decisionLogsRouter.get(
 
 decisionLogsRouter.post(
   "/",
+  requirePermission("decision.write"),
   asyncHandler(async (req: AuthedRequest, res) => {
     const data = createSchema.parse(req.body);
     const log = await prisma.decisionLog.create({ data: { ...data, decidedById: req.user?.id } });

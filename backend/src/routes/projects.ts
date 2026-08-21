@@ -6,7 +6,7 @@ import { ApiError } from "../middleware/errorHandler";
 import { computeProjectRisk } from "../lib/risk";
 import { computeProgressRate } from "../lib/progress";
 import { logActivity } from "../lib/activity";
-import type { AuthedRequest } from "../middleware/auth";
+import { requirePermission, type AuthedRequest } from "../middleware/auth";
 
 export const projectsRouter = Router();
 
@@ -115,6 +115,7 @@ projectsRouter.get(
 
 projectsRouter.post(
   "/",
+  requirePermission("project.create"),
   asyncHandler(async (req, res) => {
     const data = createProjectSchema.parse(req.body);
     const project = await prisma.project.create({ data });
@@ -124,6 +125,7 @@ projectsRouter.post(
 
 projectsRouter.patch(
   "/:id",
+  requirePermission("project.update"),
   asyncHandler(async (req: AuthedRequest, res) => {
     const data = updateProjectSchema.parse(req.body);
     const existing = await prisma.project.findUnique({ where: { id: req.params.id } });

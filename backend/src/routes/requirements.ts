@@ -5,7 +5,8 @@ import { asyncHandler } from "../lib/asyncHandler";
 import { ApiError } from "../middleware/errorHandler";
 import { nextCode } from "../lib/codes";
 import { logActivity } from "../lib/activity";
-import type { AuthedRequest } from "../middleware/auth";
+import { requirePermission, type AuthedRequest } from "../middleware/auth";
+import { can, denialMessage } from "../lib/permissions";
 
 export const requirementsRouter = Router();
 
@@ -90,6 +91,7 @@ requirementsRouter.get(
 
 requirementsRouter.post(
   "/",
+  requirePermission("requirement.create"),
   asyncHandler(async (req: AuthedRequest, res) => {
     const data = createSchema.parse(req.body);
     const code = await nextCode("requirement");
@@ -112,6 +114,7 @@ requirementsRouter.post(
 
 requirementsRouter.patch(
   "/:id",
+  requirePermission("requirement.update"),
   asyncHandler(async (req: AuthedRequest, res) => {
     const data = updateSchema.parse(req.body);
     const existing = await prisma.requirement.findUnique({
@@ -119,6 +122,20 @@ requirementsRouter.patch(
       include: { screens: true, testRelations: true },
     });
     if (!existing) throw new ApiError(404, "요구사항을 찾을 수 없습니다.");
+
+    // 요구사항 확정 is a narrower authority than 요구사항 수정 (design.md §13.1: 사업부 may edit but
+    // not confirm), so confirming is checked here rather than by the router-level guard. Leaving
+    // CONFIRMED is treated the same way — unconfirming is equally consequential.
+    // Computed as separate consts: folding them into one `||` lets TS narrow `data.status` in the
+    // second operand and flag the comparison as unreachable.
+    const nextStatus = data.status;
+    const entersConfirmed = nextStatus === "CONFIRMED";
+    const leavesConfirmed =
+      existing.status === "CONFIRMED" && nextStatus !== undefined && nextStatus !== "CONFIRMED";
+
+    if ((entersConfirmed || leavesConfirmed) && !can(req.user?.role, "requirement.confirm")) {
+      throw new ApiError(403, denialMessage("requirement.confirm"));
+    }
 
     // Risk 7 / PRD §12: unconfirming a requirement (leaving CONFIRMED) requires a reason.
     if (existing.status === "CONFIRMED" && data.status && data.status !== "CONFIRMED" && !data.statusChangeReason) {
@@ -150,6 +167,7 @@ requirementsRouter.patch(
 
 requirementsRouter.post(
   "/:id/screens",
+  requirePermission("requirement.link"),
   asyncHandler(async (req: AuthedRequest, res) => {
     const { screenId } = z.object({ screenId: z.string().min(1) }).parse(req.body);
     const requirement = await prisma.requirement.findUnique({ where: { id: req.params.id } });
@@ -178,6 +196,7 @@ requirementsRouter.post(
 // an Undo toast per design.md §4.6.
 requirementsRouter.delete(
   "/:id/screens/:screenId",
+  requirePermission("requirement.link"),
   asyncHandler(async (req, res) => {
     await prisma.requirementScreenMap.delete({
       where: { requirementId_screenId: { requirementId: req.params.id, screenId: req.params.screenId } },

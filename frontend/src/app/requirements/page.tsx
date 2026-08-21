@@ -9,6 +9,7 @@ import { Person } from "@/components/ui/Avatar";
 import { EmptyState, ErrorState, Skeleton } from "@/components/ui/Feedback";
 import { useApi } from "@/lib/useApi";
 import { formatDate, priority, requirementStatus, requirementType } from "@/lib/labels";
+import { PermissionButton } from "@/components/ui/PermissionButton";
 
 interface RequirementRow {
   id: string; code: string; title: string; type: string; priority: string; status: string; updatedAt: string;
@@ -35,7 +36,7 @@ export default function RequirementListPage() {
       <PageHeader
         title="요구사항 목록"
         sub="프로젝트별 요구사항을 우선순위, 상태, 화면 연결 여부, 담당자 기준으로 관리합니다."
-        actions={<button className="btn btn-primary">+ 요구사항 등록</button>}
+        actions={<PermissionButton permission="requirement.create" className="btn btn-primary">+ 요구사항 등록</PermissionButton>}
       />
 
       <div className="filter-bar">

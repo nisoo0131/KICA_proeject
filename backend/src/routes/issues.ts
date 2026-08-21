@@ -5,7 +5,7 @@ import { asyncHandler } from "../lib/asyncHandler";
 import { ApiError } from "../middleware/errorHandler";
 import { nextCode } from "../lib/codes";
 import { logActivity } from "../lib/activity";
-import type { AuthedRequest } from "../middleware/auth";
+import { requirePermission, type AuthedRequest } from "../middleware/auth";
 
 export const issuesRouter = Router();
 
@@ -39,6 +39,7 @@ issuesRouter.get(
 
 issuesRouter.post(
   "/",
+  requirePermission("issue.write"),
   asyncHandler(async (req: AuthedRequest, res) => {
     const data = createSchema.parse(req.body);
     const code = await nextCode("issue");
@@ -59,6 +60,7 @@ issuesRouter.post(
 
 issuesRouter.patch(
   "/:id",
+  requirePermission("issue.write"),
   asyncHandler(async (req: AuthedRequest, res) => {
     const data = z
       .object({

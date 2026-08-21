@@ -3,7 +3,7 @@ import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { asyncHandler } from "../lib/asyncHandler";
 import { ApiError } from "../middleware/errorHandler";
-import type { AuthedRequest } from "../middleware/auth";
+import { requirePermission, type AuthedRequest } from "../middleware/auth";
 
 export const commentsRouter = Router();
 
@@ -32,6 +32,7 @@ commentsRouter.get(
 
 commentsRouter.post(
   "/",
+  requirePermission("comment.write"),
   asyncHandler(async (req: AuthedRequest, res) => {
     const data = createSchema.parse(req.body);
     const comment = await prisma.reviewComment.create({
@@ -43,6 +44,7 @@ commentsRouter.post(
 
 commentsRouter.patch(
   "/:id/resolve",
+  requirePermission("comment.write"),
   asyncHandler(async (req, res) => {
     const { resolved } = z.object({ resolved: z.boolean() }).parse(req.body);
     const comment = await prisma.reviewComment.update({

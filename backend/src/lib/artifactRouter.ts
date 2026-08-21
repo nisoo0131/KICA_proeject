@@ -4,7 +4,8 @@ import { prisma } from "./prisma";
 import { asyncHandler } from "./asyncHandler";
 import { ApiError } from "../middleware/errorHandler";
 import { logActivity } from "./activity";
-import type { AuthedRequest } from "../middleware/auth";
+import { requirePermission, type AuthedRequest } from "../middleware/auth";
+import { can, denialMessage, type Permission } from "./permissions";
 
 const createSchema = z.object({
   screenId: z.string().min(1),
@@ -19,7 +20,11 @@ const statusSchema = z.object({
 // Wireframe and Hi-Fi design management are structurally identical (version, link, status, author)
 // per design.md §8/§12/§13, so both routers are generated from this one factory to keep the
 // versioning/locking rule (Risk 7) implemented in exactly one place.
-export function createArtifactRouter(delegateName: "wireframe" | "hiFiDesign", targetType: "wireframe" | "hifi_design") {
+export function createArtifactRouter(
+  delegateName: "wireframe" | "hiFiDesign",
+  targetType: "wireframe" | "hifi_design",
+  writePermission: Permission
+) {
   const router = Router();
   const delegate = () => (prisma as any)[delegateName];
 
@@ -40,6 +45,7 @@ export function createArtifactRouter(delegateName: "wireframe" | "hiFiDesign", t
   // artifacts are locked; changes go through unconfirm -> new version -> reconfirm).
   router.post(
     "/",
+    requirePermission(writePermission),
     asyncHandler(async (req: AuthedRequest, res) => {
       const data = createSchema.parse(req.body);
       const priorCount = await delegate().count({ where: { screenId: data.screenId } });
@@ -63,10 +69,17 @@ export function createArtifactRouter(delegateName: "wireframe" | "hiFiDesign", t
 
   router.patch(
     "/:id/status",
+    requirePermission(writePermission),
     asyncHandler(async (req: AuthedRequest, res) => {
       const { status } = statusSchema.parse(req.body);
       const existing = await delegate().findUnique({ where: { id: req.params.id } });
       if (!existing) throw new ApiError(404, "산출물을 찾을 수 없습니다.");
+
+      // 디자인 확정 is its own row in the design.md §13.1 matrix, so moving a version into
+      // CONFIRMED is checked separately from ordinary status edits.
+      if (status === "CONFIRMED" && !can(req.user?.role, "design.confirm")) {
+        throw new ApiError(403, denialMessage("design.confirm"));
+      }
 
       if (existing.status === "CONFIRMED" && status !== "CONFIRMED") {
         throw new ApiError(

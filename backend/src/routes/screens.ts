@@ -5,7 +5,7 @@ import { asyncHandler } from "../lib/asyncHandler";
 import { ApiError } from "../middleware/errorHandler";
 import { nextCode } from "../lib/codes";
 import { logActivity } from "../lib/activity";
-import type { AuthedRequest } from "../middleware/auth";
+import { requirePermission, type AuthedRequest } from "../middleware/auth";
 
 export const screensRouter = Router();
 
@@ -76,6 +76,7 @@ screensRouter.get(
 
 screensRouter.post(
   "/",
+  requirePermission("screen.write"),
   asyncHandler(async (req: AuthedRequest, res) => {
     const data = createSchema.parse(req.body);
     const code = await nextCode("screen");
@@ -96,6 +97,7 @@ screensRouter.post(
 
 screensRouter.patch(
   "/:id",
+  requirePermission("screen.write"),
   asyncHandler(async (req: AuthedRequest, res) => {
     const data = updateSchema.parse(req.body);
     const existing = await prisma.screen.findUnique({ where: { id: req.params.id } });

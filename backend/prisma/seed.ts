@@ -1,12 +1,34 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 const DAY = 24 * 60 * 60 * 1000;
 const daysFromNow = (n: number) => new Date(Date.now() + n * DAY);
 
+const MIN_PASSWORD_LENGTH = 12;
+
+/**
+ * Every seeded account shares this password. There is deliberately NO fallback default: this
+ * deployment is publicly reachable, so a hardcoded (and therefore documented, and therefore
+ * public) seed password would hand out working logins to anyone who read the repository.
+ */
+function requireSeedPassword(): string {
+  const password = process.env.SEED_USER_PASSWORD;
+  if (!password || password.length < MIN_PASSWORD_LENGTH) {
+    throw new Error(
+      `SEED_USER_PASSWORD 환경변수를 ${MIN_PASSWORD_LENGTH}자 이상으로 설정해 주세요. ` +
+        "시드 계정의 비밀번호로 사용되며, 기본값은 제공하지 않습니다."
+    );
+  }
+  return password;
+}
+
 async function main() {
   console.log("Seeding...");
+
+  // Resolved before any destructive work so a misconfigured run fails without wiping data.
+  const passwordHash = await bcrypt.hash(requireSeedPassword(), 12);
 
   // Clear in FK-safe order for repeatable local seeding.
   await prisma.activityLog.deleteMany();
@@ -23,16 +45,21 @@ async function main() {
   await prisma.project.deleteMany();
   await prisma.user.deleteMany();
 
-  const [minsoo, jihyun, jungwoo, yuri, jaehoon, soyeon, daeun, sumin] = await Promise.all([
-    prisma.user.create({ data: { name: "김민수", email: "minsoo.kim@planflow.io", role: "ADMIN", company: "플랜플로우 주식회사" } }),
-    prisma.user.create({ data: { name: "이지현", email: "jihyun.lee@planflow.io", role: "BUSINESS", company: "플랜플로우 주식회사" } }),
-    prisma.user.create({ data: { name: "박정우", email: "jungwoo.park@planflow.io", role: "UIUX", company: "플랜플로우 주식회사" } }),
-    prisma.user.create({ data: { name: "최유리", email: "yuri.choi@planflow.io", role: "DEVELOPER", company: "플랜플로우 주식회사" } }),
-    prisma.user.create({ data: { name: "이재훈", email: "jaehoon.lee@planflow.io", role: "DEVELOPER", company: "플랜플로우 주식회사" } }),
-    prisma.user.create({ data: { name: "한소연", email: "soyeon.han@planflow.io", role: "PLANNER", company: "플랜플로우 주식회사" } }),
-    prisma.user.create({ data: { name: "정다은", email: "daeun.jung@planflow.io", role: "PLANNER", company: "플랜플로우 주식회사" } }),
-    prisma.user.create({ data: { name: "이수민", email: "sumin.lee@planflow.io", role: "BUSINESS", company: "플랜플로우 주식회사" } }),
-  ]);
+  const COMPANY = "플랜플로우 주식회사";
+  const [minsoo, jihyun, jungwoo, yuri, jaehoon, soyeon, daeun, sumin] = await Promise.all(
+    (
+      [
+        { name: "김민수", email: "minsoo.kim@planflow.io", role: "ADMIN" },
+        { name: "이지현", email: "jihyun.lee@planflow.io", role: "BUSINESS" },
+        { name: "박정우", email: "jungwoo.park@planflow.io", role: "UIUX" },
+        { name: "최유리", email: "yuri.choi@planflow.io", role: "DEVELOPER" },
+        { name: "이재훈", email: "jaehoon.lee@planflow.io", role: "DEVELOPER" },
+        { name: "한소연", email: "soyeon.han@planflow.io", role: "PLANNER" },
+        { name: "정다은", email: "daeun.jung@planflow.io", role: "PLANNER" },
+        { name: "이수민", email: "sumin.lee@planflow.io", role: "BUSINESS" },
+      ] as const
+    ).map((u) => prisma.user.create({ data: { ...u, company: COMPANY, passwordHash } }))
+  );
 
   const projectDefs = [
     { code: "AUTH-2025-01", name: "통합인증 리뉴얼", client: "플랜플로우 주식회사", ownerId: minsoo.id, status: "IN_PROGRESS", currentStage: "WIREFRAME", dueDate: daysFromNow(30), description: "기존 통합인증 시스템의 보안 강화 및 사용자 경험 개선을 위한 전면 리뉴얼 프로젝트입니다." },

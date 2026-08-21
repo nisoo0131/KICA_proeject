@@ -6,8 +6,10 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState, ErrorState, Skeleton } from "@/components/ui/Feedback";
 import { ExternalLinkIcon, LockIcon } from "@/components/ui/Icons";
+import { PermissionButton } from "@/components/ui/PermissionButton";
 import { useApi } from "@/lib/useApi";
 import { api } from "@/lib/api";
+import type { Permission } from "@/lib/auth";
 import { artifactStatus, formatDate } from "@/lib/labels";
 
 interface ArtifactVersion {
@@ -27,11 +29,14 @@ export function ArtifactManagement({
   apiPath,
   targetType,
   title,
+  writePermission,
 }: {
   screenId: string;
   apiPath: string;
   targetType: "wireframe" | "hifi_design";
   title: string;
+  /** wireframe.write or hifi.write — confirming is gated separately on design.confirm. */
+  writePermission: Permission;
 }) {
   const { data: screen } = useApi<ScreenInfo>(`/api/screens/${screenId}`);
   const { data: versions, loading, error, refetch } = useApi<ArtifactVersion[]>(`${apiPath}?screenId=${screenId}`);
@@ -82,7 +87,7 @@ export function ArtifactManagement({
       <div className="col-2-1">
         <div>
           {!versions || versions.length === 0 ? (
-            <div className="card"><div className="card-body"><EmptyState title="등록된 버전이 없어요." action={<button className="btn btn-sm">+ 새 버전 업로드</button>} /></div></div>
+            <div className="card"><div className="card-body"><EmptyState title="등록된 버전이 없어요." action={<PermissionButton permission={writePermission} className="btn btn-sm">+ 새 버전 업로드</PermissionButton>} /></div></div>
           ) : (
             <>
               <div className="card" style={{ marginBottom: 16 }}>
@@ -94,8 +99,8 @@ export function ArtifactManagement({
                         <ExternalLinkIcon /> 외부 링크 열기
                       </a>
                     )}
-                    <button className="btn btn-sm" onClick={() => changeStatus("REVIEW_REQUESTED")}>검토 요청</button>
-                    <button className="btn btn-sm btn-primary" onClick={() => changeStatus("CONFIRMED")}>확정</button>
+                    <PermissionButton permission={writePermission} className="btn btn-sm" onClick={() => changeStatus("REVIEW_REQUESTED")}>검토 요청</PermissionButton>
+                    <PermissionButton permission="design.confirm" className="btn btn-sm btn-primary" onClick={() => changeStatus("CONFIRMED")}>확정</PermissionButton>
                   </span>
                 </div>
                 <div className="card-body">

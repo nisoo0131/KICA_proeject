@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/Badge";
 import { EmptyState, ErrorState, Skeleton } from "@/components/ui/Feedback";
 import { useApi } from "@/lib/useApi";
 import { artifactStatus, formatDate, screenStatus } from "@/lib/labels";
+import { PermissionButton } from "@/components/ui/PermissionButton";
 
 interface ScreenDetail {
   id: string; code: string; name: string; menuPath: string | null; purpose: string | null; status: string; updatedAt: string;
@@ -37,9 +38,9 @@ export default function ScreenDefinitionPage({ params }: { params: Promise<{ id:
         breadcrumb={[{ label: "화면기획", href: "/screens" }, { label: data.code }]}
         actions={
           <>
-            <button className="btn">검토 요청</button>
-            <button className="btn btn-primary">확정</button>
-            <button className="btn">수정</button>
+            <PermissionButton permission="screen.write" className="btn">검토 요청</PermissionButton>
+            <PermissionButton permission="screen.write" className="btn btn-primary">확정</PermissionButton>
+            <PermissionButton permission="screen.write" className="btn">수정</PermissionButton>
           </>
         }
       />
@@ -61,7 +62,7 @@ export default function ScreenDefinitionPage({ params }: { params: Promise<{ id:
             <div className="card-header"><span className="card-title">관련 요구사항</span></div>
             <div className="card-body">
               {data.requirements.length === 0 ? (
-                <EmptyState title="연결된 요구사항이 없어요." action={<button className="btn btn-sm">+ 요구사항 추가</button>} />
+                <EmptyState title="연결된 요구사항이 없어요." action={<PermissionButton permission="requirement.link" className="btn btn-sm">+ 요구사항 추가</PermissionButton>} />
               ) : (
                 <>
                   {data.requirements.map(({ requirement }) => (
@@ -70,7 +71,7 @@ export default function ScreenDefinitionPage({ params }: { params: Promise<{ id:
                     </Link>
                   ))}
                   <div style={{ marginTop: 10 }}>
-                    <button className="btn btn-sm">+ 요구사항 추가</button>
+                    <PermissionButton permission="requirement.link" className="btn btn-sm">+ 요구사항 추가</PermissionButton>
                   </div>
                 </>
               )}

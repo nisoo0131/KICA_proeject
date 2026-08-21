@@ -5,7 +5,7 @@ import { asyncHandler } from "../lib/asyncHandler";
 import { ApiError } from "../middleware/errorHandler";
 import { nextCode } from "../lib/codes";
 import { logActivity } from "../lib/activity";
-import type { AuthedRequest } from "../middleware/auth";
+import { requirePermission, type AuthedRequest } from "../middleware/auth";
 
 export const testScenariosRouter = Router();
 
@@ -31,6 +31,7 @@ testScenariosRouter.get(
 
 testScenariosRouter.post(
   "/",
+  requirePermission("test.write"),
   asyncHandler(async (req: AuthedRequest, res) => {
     const data = createSchema.parse(req.body);
     const code = await nextCode("testScenario");
@@ -61,6 +62,7 @@ testScenariosRouter.post(
 
 testScenariosRouter.patch(
   "/:id",
+  requirePermission("test.write"),
   asyncHandler(async (req: AuthedRequest, res) => {
     const data = z
       .object({ status: z.enum(["NOT_RUN", "PASSED", "FAILED", "RETEST"]).optional(), title: z.string().optional() })

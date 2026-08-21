@@ -8,6 +8,7 @@ import { ErrorState, Skeleton, EmptyState } from "@/components/ui/Feedback";
 import { AlertIcon } from "@/components/ui/Icons";
 import { useApi } from "@/lib/useApi";
 import { formatDate, priority, requirementStatus, screenStatus } from "@/lib/labels";
+import { PermissionButton } from "@/components/ui/PermissionButton";
 
 interface RequirementDetail {
   id: string; code: string; title: string; status: string; priority: string; updatedAt: string;
@@ -39,9 +40,9 @@ export default function RequirementDetailPage({ params }: { params: Promise<{ id
         breadcrumb={[{ label: "요구사항", href: "/requirements" }, { label: data.code }]}
         actions={
           <>
-            <button className="btn">검토 요청</button>
-            <button className="btn btn-primary">확정</button>
-            <button className="btn">수정</button>
+            <PermissionButton permission="requirement.update" className="btn">검토 요청</PermissionButton>
+            <PermissionButton permission="requirement.confirm" className="btn btn-primary">확정</PermissionButton>
+            <PermissionButton permission="requirement.update" className="btn">수정</PermissionButton>
             <button className="btn btn-ghost">더보기</button>
           </>
         }

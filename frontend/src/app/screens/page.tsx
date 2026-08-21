@@ -9,6 +9,7 @@ import { Person } from "@/components/ui/Avatar";
 import { EmptyState, ErrorState, Skeleton } from "@/components/ui/Feedback";
 import { useApi } from "@/lib/useApi";
 import { artifactStatus, formatDate, screenStatus } from "@/lib/labels";
+import { PermissionButton } from "@/components/ui/PermissionButton";
 
 interface ScreenRow {
   id: string; code: string; name: string; menuPath: string | null; status: string; updatedAt: string;
@@ -37,7 +38,7 @@ export default function ScreenListPage() {
       <PageHeader
         title="화면 목록"
         sub="프로젝트 내 모든 화면의 기획·와이어프레임·디자인 진행 상태를 한 번에 비교합니다."
-        actions={<button className="btn btn-primary">+ 화면 추가</button>}
+        actions={<PermissionButton permission="screen.write" className="btn btn-primary">+ 화면 추가</PermissionButton>}
       />
 
       <div className="filter-bar">

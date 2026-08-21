@@ -9,6 +9,7 @@ import { EmptyState, ErrorState, Skeleton } from "@/components/ui/Feedback";
 import { FlaskIcon, ShieldIcon } from "@/components/ui/Icons";
 import { useApi } from "@/lib/useApi";
 import { formatDate, issueStatus, severity, testStatus } from "@/lib/labels";
+import { PermissionButton } from "@/components/ui/PermissionButton";
 
 interface TestScenarioRow {
   id: string; code: string; title: string; status: string; owner: { name: string } | null;
@@ -41,7 +42,7 @@ export default function TestIssueListPage() {
       <PageHeader
         title="테스트/이슈 목록"
         sub="테스트 시나리오 실행 결과와 결함/이슈를 통합 관리하고, 품질 현황을 확인하세요."
-        actions={<button className="btn btn-primary">+ 이슈 등록</button>}
+        actions={<PermissionButton permission="issue.write" className="btn btn-primary">+ 이슈 등록</PermissionButton>}
       />
 
       <div className="stat-mini-row">

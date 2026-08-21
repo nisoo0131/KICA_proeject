@@ -1,28 +1,53 @@
 import type { NextFunction, Request, Response } from "express";
-import { prisma } from "../lib/prisma";
+import type { Role } from "@prisma/client";
+import { ApiError } from "./errorHandler";
+import { can, denialMessage, type Permission } from "../lib/permissions";
+import { verifyToken } from "../lib/jwt";
 
 export interface AuthedRequest extends Request {
-  user?: { id: string; role: string; name: string };
+  user?: { id: string; role: Role; name: string };
 }
 
-// STUB AUTH: real login/session verification is deferred (see CLAUDE.md Permissions section).
-// Reads an `x-user-id` header if the client sends one, otherwise falls back to the first seeded
-// admin user so the API is usable without a login flow during MVP development. Replace this with
-// real session/JWT verification before any non-local deployment.
-export async function attachCurrentUser(req: AuthedRequest, _res: Response, next: NextFunction) {
-  try {
-    const headerUserId = req.header("x-user-id");
-    const user = headerUserId
-      ? await prisma.user.findUnique({ where: { id: headerUserId } })
-      : await prisma.user.findFirst({ where: { role: "ADMIN" }, orderBy: { createdAt: "asc" } });
-
-    if (user) {
-      req.user = { id: user.id, role: user.role, name: user.name };
+/**
+ * Verifies a bearer token when present and attaches the caller. Never rejects — routes opt into
+ * enforcement with requireAuth/requirePermission, which keeps /health and /api/auth/login open.
+ *
+ * The token is self-contained (id/role/name are claims), so this does no database work: an
+ * unreachable database must not be able to break every authenticated request.
+ */
+export function attachCurrentUser(req: AuthedRequest, _res: Response, next: NextFunction) {
+  const header = req.header("authorization");
+  if (header?.startsWith("Bearer ")) {
+    const payload = verifyToken(header.slice("Bearer ".length).trim());
+    if (payload) {
+      req.user = { id: payload.sub, role: payload.role, name: payload.name };
     }
-  } catch (err) {
-    // Degrade to "no current user" instead of hanging the request (e.g. DB unreachable) — this
-    // runs on every request, so a lookup failure here must never block routes like /health.
-    console.error("attachCurrentUser failed, continuing without a user:", err);
   }
   next();
+}
+
+export function requireAuth(req: AuthedRequest, _res: Response, next: NextFunction) {
+  if (!req.user) {
+    next(new ApiError(401, "로그인이 필요합니다."));
+    return;
+  }
+  next();
+}
+
+/**
+ * Enforces the design.md §13.1 matrix. The 403 body carries the reason and the roles that would be
+ * allowed, so the client can surface "why" instead of an unexplained dead end (design.md §11.3).
+ */
+export function requirePermission(permission: Permission) {
+  return (req: AuthedRequest, _res: Response, next: NextFunction) => {
+    if (!req.user) {
+      next(new ApiError(401, "로그인이 필요합니다."));
+      return;
+    }
+    if (!can(req.user.role, permission)) {
+      next(new ApiError(403, denialMessage(permission)));
+      return;
+    }
+    next();
+  };
 }
